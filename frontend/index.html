@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Teste</title>
+</head>
+<body>
+
+<h2>Login</h2>
+<input id="user" placeholder="username">
+<input id="pass" placeholder="password">
+<button onclick="login()">Login</button>
+
+<h2>Salas</h2>
+<button onclick="getRooms()">Buscar salas</button>
+
+<pre id="resultado"></pre>
+
+<script>
+let token = "";
+
+async function login() {
+  const res = await fetch("http://localhost:3000/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      username: document.getElementById("user").value,
+      password: document.getElementById("pass").value
+    })
+  });
+
+  const data = await res.json();
+  token = data.token;
+
+  alert("Logado!");
+}
+
+async function getRooms() {
+  const res = await fetch("http://localhost:3000/rooms", {
+    method: "GET",
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  });
+
+  const data = await res.json();
+
+  document.getElementById("resultado").innerText =
+    JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>
