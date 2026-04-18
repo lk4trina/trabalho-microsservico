@@ -1,55 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-  <title>Teste</title>
+  <meta charset="UTF-8">
+  <title>Rooms App</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<h2>Login</h2>
-<input id="user" placeholder="username">
-<input id="pass" placeholder="password">
-<button onclick="login()">Login</button>
+<div class="container">
 
-<h2>Salas</h2>
-<button onclick="getRooms()">Buscar salas</button>
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <button onclick="loadRooms()">Ver salas</button>
+  </div>
 
-<pre id="resultado"></pre>
+  <div class="main">
 
-<script>
-let token = "";
+    <!-- LOGIN -->
+    <div class="login">
+      <h2>Login</h2>
+      <input id="user" placeholder="Usuário">
+      <input id="pass" type="password" placeholder="Senha">
+      <button onclick="login()">Entrar</button>
+    </div>
 
-async function login() {
-  const res = await fetch("http://localhost:3000/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      username: document.getElementById("user").value,
-      password: document.getElementById("pass").value
-    })
-  });
+    <!-- CRIAR SALA -->
+    <div class="create-room">
+      <h2>Criar Sala</h2>
+      <input id="roomName" placeholder="Nome">
+      <input id="capacity" type="number" placeholder="Capacidade">
+      <button onclick="createRoom()">Criar</button>
+    </div>
 
-  const data = await res.json();
-  token = data.token;
+    <!-- LISTA -->
+    <div id="rooms" class="rooms"></div>
 
-  alert("Logado!");
-}
+  </div>
 
-async function getRooms() {
-  const res = await fetch("http://localhost:3000/rooms", {
-    method: "GET",
-    headers: {
-      "Authorization": "Bearer " + token
-    }
-  });
+</div>
 
-  const data = await res.json();
-
-  document.getElementById("resultado").innerText =
-    JSON.stringify(data, null, 2);
-}
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
