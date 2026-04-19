@@ -1,5 +1,17 @@
-let token = null;
+function getToken() {
+  return localStorage.getItem("token");
+}
 
+function setToken(token) {
+  localStorage.setItem("token", token);
+}
+
+function logout() {
+  localStorage.removeItem("token");
+  window.location.href = "login.html";
+}
+
+// LOGIN
 async function login() {
   const username = document.getElementById("user").value;
   const password = document.getElementById("pass").value;
@@ -12,11 +24,25 @@ async function login() {
 
   const data = await res.json();
 
-  token = data.token;
-  alert("Logado!");
+  if (!data.token) {
+    alert("Erro no login");
+    return;
+  }
+
+  setToken(data.token);
+  window.location.href = "rooms.html";
 }
 
+// LISTAR SALAS
 async function loadRooms() {
+  const token = getToken();
+
+  if (!token) {
+    alert("Faça login primeiro");
+    window.location.href = "login.html";
+    return;
+  }
+
   const res = await fetch("http://localhost:3000/rooms", {
     headers: {
       Authorization: "Bearer " + token
@@ -44,7 +70,10 @@ async function loadRooms() {
   });
 }
 
+// CRIAR SALA
 async function createRoom() {
+  const token = getToken();
+
   const name = document.getElementById("roomName").value;
   const capacity = document.getElementById("capacity").value;
 
@@ -60,7 +89,10 @@ async function createRoom() {
   loadRooms();
 }
 
-    async function toggleRoom(id) {
+// TOGGLE
+async function toggleRoom(id) {
+  const token = getToken();
+
   await fetch(`http://localhost:3000/rooms/${id}/toggle`, {
     method: "PATCH",
     headers: {

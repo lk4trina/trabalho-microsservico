@@ -1,18 +1,16 @@
-class Room {
-  constructor({ id, name, capacity, active = true }) {
-    if (!name || typeof name !== 'string') {
-      throw new Error('Nome da sala é obrigatório');
+class User {
+  constructor({ username, password }) {
+    if (!username || typeof username !== 'string') {
+      throw new Error('Username é obrigatório');
     }
 
-    if (!Number.isInteger(capacity) || capacity <= 0) {
-      throw new Error('Capacidade deve ser um número maior que zero');
+    if (!password || typeof password !== 'string' || password.length < 3) {
+      throw new Error('Password deve ter pelo menos 3 caracteres');
     }
 
-    this.id = id;
-    this.name = name;
-    this.capacity = capacity;
-    this.active = active;
+    this.username = username;
+    this.password = password;
   }
 }
 
-module.exports = Room;
+module.exports = User;

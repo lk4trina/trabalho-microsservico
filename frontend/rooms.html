@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Rooms App</title>
+  <title>Salas</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,27 +12,20 @@
   <div class="sidebar">
     <h2>Menu</h2>
     <button onclick="loadRooms()">Ver salas</button>
+    <button onclick="logout()">Sair</button>
   </div>
 
   <div class="main">
 
-    <!-- LOGIN -->
-    <div class="login">
-      <h2>Login</h2>
-      <input id="user" placeholder="Usuário">
-      <input id="pass" type="password" placeholder="Senha">
-      <button onclick="login()">Entrar</button>
-    </div>
-
-    <!-- CRIAR SALA -->
-    <div class="create-room">
+    <div class="card">
       <h2>Criar Sala</h2>
+
       <input id="roomName" placeholder="Nome">
       <input id="capacity" type="number" placeholder="Capacidade">
+
       <button onclick="createRoom()">Criar</button>
     </div>
 
-    <!-- LISTA -->
     <div id="rooms" class="rooms"></div>
 
   </div>

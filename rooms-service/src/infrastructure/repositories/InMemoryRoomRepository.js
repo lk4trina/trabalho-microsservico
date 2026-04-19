@@ -1,18 +1,30 @@
-class Room {
-  constructor({ id, name, capacity, active = true }) {
-    if (!name || typeof name !== 'string') {
-      throw new Error('Nome da sala é obrigatório');
-    }
+class InMemoryRoomRepository {
+  constructor() {
+    this.rooms = [];
+    this.currentId = 1;
+  }
 
-    if (!Number.isInteger(capacity) || capacity <= 0) {
-      throw new Error('Capacidade deve ser um número maior que zero');
-    }
+  create(room) {
+    const newRoom = { ...room, id: this.currentId++ };
+    this.rooms.push(newRoom);
+    return newRoom;
+  }
 
-    this.id = id;
-    this.name = name;
-    this.capacity = capacity;
-    this.active = active;
+  findAll() {
+    return this.rooms;
+  }
+
+  findById(id) {
+    return this.rooms.find(room => room.id === Number(id));
+  }
+
+  update(updatedRoom) {
+    const index = this.rooms.findIndex(room => room.id === updatedRoom.id);
+    if (index === -1) return null;
+
+    this.rooms[index] = updatedRoom;
+    return updatedRoom;
   }
 }
 
-module.exports = Room;
+module.exports = InMemoryRoomRepository;
