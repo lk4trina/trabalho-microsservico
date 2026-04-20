@@ -24,7 +24,7 @@ app.use(cors());
 const userRepository = new InMemoryUserRepository();
 const passwordHasher = new PasswordHasher();
 const jwtService = new JwtService('segredo-super-seguro');
-const roomsProxy = new RoomsProxy('http://localhost:3000');
+const roomsProxy = new RoomsProxy('http://localhost :3002');
 
 const registerUser = new RegisterUser(userRepository, passwordHasher);
 const loginUser = new LoginUser(userRepository, passwordHasher, jwtService);

@@ -24,7 +24,7 @@ async function login() {
   const username = document.getElementById("user").value;
   const password = document.getElementById("pass").value;
 
-  const res = await fetch("http://localhost:3000/login", {
+  const res = await fetch("http://localhost:3002/login", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({ username, password })
@@ -86,7 +86,7 @@ async function loadRooms() {
     return;
   }
 
-  const res = await fetch("http://localhost:3000/rooms", {
+  const res = await fetch("http://localhost:3002/rooms", {
     headers: {
       Authorization: "Bearer " + token
     }
@@ -103,7 +103,7 @@ async function createRoom() {
   const name = document.getElementById("roomName").value;
   const capacity = document.getElementById("capacity").value;
 
-  const res = await fetch("http://localhost:3000/rooms", {
+  const res = await fetch("http://localhost:3002/rooms", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -123,7 +123,7 @@ async function createRoom() {
 async function toggleRoom(id, button) {
   const token = getToken();
 
-  const res = await fetch(`http://localhost:3000/rooms/${id}/toggle`, {
+  const res = await fetch(`http://localhost:3002/rooms/${id}/toggle`, {
     method: "PATCH",
     headers: {
       Authorization: "Bearer " + token
