@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const roleMiddleware = require('./presentation/middlewares/roleMiddleware');
 
 const InMemoryUserRepository = require('./infrastructure/repositories/InMemoryUserRepository');
 const PasswordHasher = require('./infrastructure/security/PasswordHasher');
@@ -35,6 +36,6 @@ const roomsGatewayController = new RoomsGatewayController(roomsProxy);
 const authMiddleware = authMiddlewareFactory(validateToken);
 
 app.use(authRoutes(authController));
-app.use(roomsRoutes(roomsGatewayController, authMiddleware));
+app.use(roomsRoutes(roomsGatewayController, authMiddleware, roleMiddleware));
 
 module.exports = app;

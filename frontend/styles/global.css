@@ -3,4 +3,10 @@
     --contr-color: #EE018C;
     --btn-primary: #FABBD4;
     --card-color: #fcf6fc;
+    --room-color: #fabbd462;
+    --font-color-lgt: #fbeffa;
+    --side-color: #ee018b56;
+    --side-btn: rgba(255,255,255,0.1);
+    --side-btn-hvr: rgba(255,255,255,0.2);
+    --border-lgt: rgba(255,255,255,0.2);
 }

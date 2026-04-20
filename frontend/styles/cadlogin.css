@@ -1,0 +1,73 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+}
+
+.card-regst {
+    display: flex;
+    flex-direction: column;
+
+    width: 22rem;
+    padding: 0.7rem;
+
+    align-items: center;
+
+    border-radius: 0.4rem;
+
+    background: var(--side-color);
+
+    color: var(--font-color-lgt);
+}
+
+.card-regst input{
+    width: 90%;
+    height: 2rem;
+    
+    margin: 0.6rem;
+
+    border: none;
+
+    text-align: center;
+
+    border-radius: 0.2rem;
+}
+
+#btn-register {
+    background-color: var(--side-btn);
+    color: var(--font-color-lgt);
+    font-weight: bold;
+
+    border: none;
+    border-radius: 0.2rem;
+
+    width: 90%;
+    height: 2rem;
+    margin-top: 0.6rem;
+
+    cursor: pointer;
+
+    transition: 0.4s ease;
+}
+
+#btn-register:hover {
+    background-color: var(--side-btn-hvr);
+}
+
+.card-regst span {
+    font-size: 0.8rem;
+}
+
+.card-regst a {
+    font-weight: bold;
+    color: var(--contr-color);
+    font-size: 0.8rem;
+
+    text-decoration: none;
+
+    cursor: pointer;
+}

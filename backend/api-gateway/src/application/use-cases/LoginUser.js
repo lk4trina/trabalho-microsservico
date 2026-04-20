@@ -18,7 +18,10 @@ class LoginUser {
       throw new Error('Senha inválida');
     }
 
-    return this.jwtService.sign({ username: user.username });
+    return this.jwtService.sign({
+      username: user.username,
+      role: user.role
+    });
   }
 }
 

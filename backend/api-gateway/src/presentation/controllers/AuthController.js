@@ -7,8 +7,10 @@ class AuthController {
   register = async (req, res) => {
     try {
       const user = await this.registerUser.execute(req.body);
+
       return res.status(201).json({
         username: user.username,
+        role: user.role,
         message: 'Usuário criado com sucesso'
       });
     } catch (error) {
