@@ -61,7 +61,7 @@ async function loadRooms() {
     div.innerHTML = `
       <h3>${room.name}</h3>
       <p>Capacidade: ${room.capacity}</p>
-      <button onclick="toggleRoom(${room.id})">
+      <button id="btn-room" onclick="toggleRoom(${room.id})">
         ${room.active ? "Desativar" : "Ativar"}
       </button>
     `;

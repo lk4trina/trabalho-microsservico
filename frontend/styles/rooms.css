@@ -1,0 +1,145 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg-color);
+}
+
+/* CARD */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: var(--card-color);
+
+  padding: 25px;
+  border-radius: 15px;
+  width: 280px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* input e button */
+
+#roomName, #capacity {
+  width: 100%;
+  height: 2.5rem;
+  margin: 0.4rem 0;
+
+  background-color: var(--bg-color);
+
+  border: 1px solid var(--contr-color);
+  border-radius: 0.4rem;
+
+  text-align: center;
+  font-weight: 400;
+  color: var(--contr-color);
+}
+
+#roomName {
+  margin-top: 1rem;
+}
+
+#btn-create {
+  width: 100%;
+  padding: 10px;
+
+  border: none;
+
+  background: var(--contr-color);
+  color: var(--bg-color);
+  border-radius: 8px;
+
+  margin-top: 1rem;
+
+  cursor: pointer;
+
+  transition: 0.4s ease;
+}
+
+#btn-create:hover{
+  background-color: var(--btn-primary);
+
+  color: var(--contr-color);
+}
+
+/* LAYOUT */
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 16rem;
+
+  background: var(--contr-color);
+  color: var(--card-color);
+
+  padding: 20px;
+}
+
+.sidebar button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+
+  border: none;
+  background: var(--bg-color);
+  color: var(--contr-color);
+
+  border-radius: 8px;
+  cursor: pointer;
+
+  transition: 0.4s ease;
+}
+
+.sidebar button:hover {
+  background-color: var(--btn-primary);
+
+  color: var(--contr-color);
+}
+
+.main {
+  flex: 1;
+  padding: 30px;
+}
+
+/* ROOMS */
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 220px);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.room-card {
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+#btn-room {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+
+  border: none;
+
+  background: var(--btn-primary);
+  color: var(--contr-color);
+
+  border-radius: 8px;
+
+  cursor: pointer;
+  transition: 0.4s ease;
+}
+
+#btn-room:hover {
+  background-color: var(--contr-color);
+  color: var(--btn-primary);
+}
