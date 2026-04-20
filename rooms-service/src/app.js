@@ -3,7 +3,7 @@ const cors = require('cors');
 
 const InMemoryRoomRepository = require('./infrastructure/repositories/InMemoryRoomRepository');
 const CreateRoom = require('./application/use-cases/CreateRoom');
-const ListActiveRooms = require('./application/use-cases/ListActiveRooms');
+const ListAllRooms = require('./application/use-cases/ListAllRooms');
 const ToggleRoomStatus = require('./application/use-cases/ToggleRoomStatus');
 const RoomController = require('./presentation/controllers/RoomController');
 const roomRoutes = require('./presentation/routes/roomRoutes');
@@ -15,12 +15,12 @@ app.use(cors());
 const roomRepository = new InMemoryRoomRepository();
 
 const createRoom = new CreateRoom(roomRepository);
-const listActiveRooms = new ListActiveRooms(roomRepository);
+const listAllRooms = new ListAllRooms(roomRepository);
 const toggleRoomStatus = new ToggleRoomStatus(roomRepository);
 
 const roomController = new RoomController(
   createRoom,
-  listActiveRooms,
+  listAllRooms,
   toggleRoomStatus
 );
 

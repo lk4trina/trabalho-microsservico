@@ -9,27 +9,41 @@
 
 <div class="container">
 
-  <div class="sidebar">
-    <h2>Menu</h2>
-    <button onclick="loadRooms()">Ver salas</button>
+  <div class="sidebar" id="sidebar">
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+
+    <h2 class="menu-title">Menu</h2>
+
+    <!--<button onclick="loadRooms()">Ver salas</button>-->
+    <button onclick="openModal()">Criar sala</button>
     <button onclick="logout()">Sair</button>
   </div>
 
   <div class="main">
 
-    <div class="card">
-      <h2>Criar Sala</h2>
-
-      <input id="roomName" placeholder="Nome">
-      <input id="capacity" type="number" placeholder="Capacidade">
-
-      <button id="btn-create" onclick="createRoom()">Criar</button>
+    <div class="filter" style="margin-top: 20px;">
+      <button onclick="setFilter('all')">Todas</button>
+      <button onclick="setFilter('active')">Ativas</button>
+      <button onclick="setFilter('inactive')">Inativas</button>
     </div>
 
     <div id="rooms" class="rooms"></div>
 
   </div>
 
+</div>
+
+<!-- popup -->
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Criar Sala</h2>
+
+    <input id="roomName" placeholder="Nome">
+    <input id="capacity" type="number" placeholder="Capacidade">
+
+    <button type="button" onclick="createRoom()">Criar</button>
+    <button type="button" onclick="closeModal()">Cancelar</button>
+  </div>
 </div>
 
 <script src="script.js"></script>

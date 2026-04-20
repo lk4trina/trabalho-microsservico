@@ -6,7 +6,7 @@ class CreateRoom {
   }
 
   execute({ name, capacity }) {
-    const room = new Room({ name, capacity });
+    const room = new Room({ name, capacity, active:true });
     return this.roomRepository.create(room);
   }
 }

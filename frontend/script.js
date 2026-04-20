@@ -1,3 +1,11 @@
+let currentFilter = "all";
+let allRooms = [];
+
+function setFilter(filter) {
+  currentFilter = filter;
+  renderRooms();
+}
+
 function getToken() {
   return localStorage.getItem("token");
 }
@@ -33,6 +41,41 @@ async function login() {
   window.location.href = "rooms.html";
 }
 
+// render room
+
+function renderRooms() {
+  const container = document.getElementById("rooms");
+  container.innerHTML = "";
+
+  let filteredRooms = allRooms;
+
+  if (currentFilter === "active") {
+    filteredRooms = allRooms.filter(room => room.active);
+  }
+
+  if (currentFilter === "inactive") {
+    filteredRooms = allRooms.filter(room => !room.active);
+  }
+
+  filteredRooms.forEach(room => {
+    const div = document.createElement("div");
+
+    div.classList.add("room-card");
+    if (!room.active) div.classList.add("inactive");
+
+    div.innerHTML = `
+      <h3>${room.name}</h3>
+      <p>Capacidade: ${room.capacity}</p>
+      <p>Status: ${room.active ? "Ativa" : "Inativa"}</p>
+      <button class="btn-room" onclick="toggleRoom(${room.id}, this)">
+        ${room.active ? "Desativar" : "Ativar"}
+      </button>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
 // LISTAR SALAS
 async function loadRooms() {
   const token = getToken();
@@ -49,25 +92,8 @@ async function loadRooms() {
     }
   });
 
-  const rooms = await res.json();
-
-  const container = document.getElementById("rooms");
-  container.innerHTML = "";
-
-  rooms.forEach(room => {
-    const div = document.createElement("div");
-    div.className = "room-card";
-
-    div.innerHTML = `
-      <h3>${room.name}</h3>
-      <p>Capacidade: ${room.capacity}</p>
-      <button id="btn-room" onclick="toggleRoom(${room.id})">
-        ${room.active ? "Desativar" : "Ativar"}
-      </button>
-    `;
-
-    container.appendChild(div);
-  });
+  allRooms = await res.json();
+  renderRooms();
 }
 
 // CRIAR SALA
@@ -77,7 +103,7 @@ async function createRoom() {
   const name = document.getElementById("roomName").value;
   const capacity = document.getElementById("capacity").value;
 
-  await fetch("http://localhost:3000/rooms", {
+  const res = await fetch("http://localhost:3000/rooms", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -86,19 +112,49 @@ async function createRoom() {
     body: JSON.stringify({ name, capacity: Number(capacity) })
   });
 
-  loadRooms();
+  const newRoom = await res.json();
+
+  allRooms.push(newRoom);
+
+  renderRooms();
 }
 
 // TOGGLE
-async function toggleRoom(id) {
+async function toggleRoom(id, button) {
   const token = getToken();
 
-  await fetch(`http://localhost:3000/rooms/${id}/toggle`, {
+  const res = await fetch(`http://localhost:3000/rooms/${id}/toggle`, {
     method: "PATCH",
     headers: {
       Authorization: "Bearer " + token
     }
   });
 
-  loadRooms();
+  const updatedRoom = await res.json();
+
+  //atualiza o estado local
+  const room = allRooms.find(r => r.id === Number(id));
+  room.active = updatedRoom.active;
+
+  //render com filtro
+  renderRooms();
 }
+
+function openModal() {
+  document.getElementById("modal").classList.remove("hidden");
+}
+
+function closeModal() {
+  document.getElementById("modal").classList.add("hidden");
+}
+
+function toggleSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  sidebar.classList.toggle("collapsed");
+}
+
+window.addEventListener("load", () => {
+  if (window.location.pathname.includes("rooms.html")) {
+    loadRooms();
+  }
+});

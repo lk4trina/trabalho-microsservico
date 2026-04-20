@@ -1,7 +1,7 @@
 class RoomController {
-  constructor(createRoom, listActiveRooms, toggleRoomStatus) {
+  constructor(createRoom, listAllRooms, toggleRoomStatus) {
     this.createRoom = createRoom;
-    this.listActiveRooms = listActiveRooms;
+    this.listAllRooms = listAllRooms;
     this.toggleRoomStatus = toggleRoomStatus;
   }
 
@@ -15,7 +15,7 @@ class RoomController {
   };
 
   list = (req, res) => {
-    const rooms = this.listActiveRooms.execute();
+    const rooms = this.listAllRooms.execute();
     return res.json(rooms);
   };
 

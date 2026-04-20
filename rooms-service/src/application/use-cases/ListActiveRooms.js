@@ -1,4 +1,4 @@
-class ListActiveRooms {
+/*class ListActiveRooms {
   constructor(roomRepository) {
     this.roomRepository = roomRepository;
   }
@@ -8,4 +8,4 @@ class ListActiveRooms {
   }
 }
 
-module.exports = ListActiveRooms;
+module.exports = ListActiveRooms;*/
