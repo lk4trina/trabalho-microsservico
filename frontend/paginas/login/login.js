@@ -5,21 +5,35 @@ async function login() {
   const username = document.getElementById("user").value;
   const password = document.getElementById("pass").value;
 
-  const res = await loginRequest({ username, password });
-  const data = await res.json();
-
-  if (!data.token) {
-    alert("Erro no login");
+  if (!username || !password) {
+    alert("Preencha usuário e senha");
     return;
   }
 
-  setUser(data);
+  try {
+    const res = await loginRequest({ username, password });
+    const data = await res.json();
 
-  // 🔥 REDIRECIONAMENTO POR ROLE
-  if (data.role === "ADMIN") {
-    window.location.href = "../admin/admin.html";
-  } else {
-    window.location.href = "../user/user.html";
+    if (!res.ok) {
+      alert(data.error || "Erro no login");
+      return;
+    }
+
+    if (!data.token || !data.role) {
+      alert("Resposta de login inválida");
+      return;
+    }
+
+    setUser(data);
+
+    if (data.role === "ADMIN") {
+      window.location.href = "../admin/admin.html";
+    } else {
+      window.location.href = "../user/user.html";
+    }
+  } catch (error) {
+    console.error("Erro no login:", error);
+    alert("Erro de conexão com o servidor");
   }
 }
 

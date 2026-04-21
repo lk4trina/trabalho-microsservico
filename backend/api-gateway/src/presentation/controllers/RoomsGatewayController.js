@@ -5,11 +5,12 @@ class RoomsGatewayController {
 
   list = async (req, res) => {
     try {
-      const rooms = await this.roomsProxy.getRooms();
+      const token = req.headers.authorization;
+      const rooms = await this.roomsProxy.getRooms(token);
       return res.json(rooms);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: 'Erro ao buscar salas' });
+      return res.status(500).json({ error: "Erro ao buscar salas" });
     }
   };
 
@@ -18,14 +19,14 @@ class RoomsGatewayController {
       const { name, capacity } = req.body;
 
       if (!name || !capacity) {
-        return res.status(400).json({ error: 'Dados inválidos' });
+        return res.status(400).json({ error: "Dados inválidos" });
       }
 
       const room = await this.roomsProxy.createRoom({ name, capacity });
       return res.status(201).json(room);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: 'Erro ao criar sala' });
+      return res.status(500).json({ error: "Erro ao criar sala" });
     }
   };
 
@@ -35,7 +36,7 @@ class RoomsGatewayController {
       return res.json(room);
     } catch (error) {
       console.error(error);
-      return res.status(404).json({ error: 'Sala não encontrada' });
+      return res.status(404).json({ error: "Sala não encontrada" });
     }
   };
 }

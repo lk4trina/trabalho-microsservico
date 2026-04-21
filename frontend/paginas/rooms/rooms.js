@@ -13,6 +13,10 @@ function isAdminPage() {
   return window.location.pathname.includes("/admin/");
 }
 
+function isUserPage() {
+  return window.location.pathname.includes("/user/");
+}
+
 // FILTRO
 function setFilter(filter) {
   currentFilter = filter;
@@ -65,28 +69,41 @@ function renderRooms() {
 // LOAD
 async function loadRooms() {
   const token = getToken();
+  const role = getRole();
 
-  if (!token) {
+  if (!token || !role) {
     alert("Faça login primeiro");
+    window.location.href = "../login/login.html";
+    return;
+  }
+
+  if (isAdminPage() && role !== "ADMIN") {
+    alert("Acesso restrito ao administrador");
+    window.location.href = "../login/login.html";
+    return;
+  }
+
+  if (isUserPage() && role !== "USER") {
+    alert("Acesso restrito ao usuário");
     window.location.href = "../login/login.html";
     return;
   }
 
   try {
     const res = await getRooms(token);
+    const data = await res.json();
 
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      console.error("Erro ao carregar salas:", errorData);
-      alert(errorData.error || "Erro ao carregar salas");
+      console.error("Erro ao buscar salas:", data);
+      alert(data.error || "Erro ao buscar salas");
       return;
     }
 
-    allRooms = await res.json();
+    allRooms = data;
     renderRooms();
   } catch (error) {
-    console.error("Erro de rede ao carregar salas:", error);
-    alert("Erro de conexão ao carregar salas");
+    console.error("Erro de rede ao buscar salas:", error);
+    alert("Erro ao buscar salas");
   }
 }
 
@@ -114,27 +131,24 @@ async function createRoom() {
       token,
     );
 
+    const data = await res.json();
+
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      console.error("Erro ao criar sala:", errorData);
-      alert(errorData.error || "Erro ao criar sala");
+      alert(data.error || "Erro ao criar sala");
       return;
     }
 
-    const newRoom = await res.json();
-    allRooms.push(newRoom);
+    allRooms.push(data);
     renderRooms();
     closeModal();
   } catch (error) {
-    console.error("Erro de rede ao criar sala:", error);
+    console.error("Erro ao criar sala:", error);
     alert("Erro de conexão ao criar sala");
   }
 }
 
 // TOGGLE
 async function toggleRoom(id) {
-  console.log("clicou no toggle", id);
-
   const token = getToken();
   const role = getRole();
 
@@ -145,28 +159,26 @@ async function toggleRoom(id) {
 
   try {
     const res = await toggleRoomRequest(id, token);
+    const data = await res.json();
 
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      console.error("Erro ao alterar sala:", errorData);
-      alert(errorData.error || "Erro ao alterar sala");
+      alert(data.error || "Erro ao atualizar sala");
       return;
     }
 
-    const updated = await res.json();
     const room = allRooms.find((r) => r.id === Number(id));
-
     if (room) {
-      room.active = updated.active;
+      room.active = data.active;
     }
 
     renderRooms();
   } catch (error) {
-    console.error("Erro de rede no toggle:", error);
+    console.error("Erro ao atualizar sala:", error);
     alert("Erro de conexão ao atualizar sala");
   }
 }
 
+// UI
 function openModal() {
   const role = getRole();
 
