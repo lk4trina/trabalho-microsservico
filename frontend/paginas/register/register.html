@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="../../styles/index.css" />
+  </head>
+  <body>
+    <div class="center">
+      <div class="card-regst">
+        <h2>Criar Conta</h2>
+
+        <input id="reg-user" placeholder="Usuário" />
+        <input id="reg-pass" type="password" placeholder="Senha" />
+        <input
+          id="reg-pass-confirm"
+          type="password"
+          placeholder="Confirmar Senha"
+        />
+
+        <!-- 🔥 ROLE -->
+        <div class="role-container">
+          <label>Tipo de usuário:</label>
+
+          <select id="reg-role">
+            <option value="USER">Padrão</option>
+            <option value="ADMIN">Administrador</option>
+          </select>
+        </div>
+
+        <button id="btn-register" onclick="cadastrar()">Cadastrar</button>
+
+        <div class="link-login">
+          <span>Já tem uma conta? </span>
+          <a href="../login/login.html">Entrar</a>
+        </div>
+      </div>
+    </div>
+
+    <script src="register.js" type="module"></script>
+  </body>
+</html>
