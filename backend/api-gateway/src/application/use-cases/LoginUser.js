@@ -6,27 +6,31 @@ class LoginUser {
   }
 
   async execute({ username, password }) {
-    /*const user = this.userRepository.findByUsername(username);
+    const user = await this.userRepository.findByUsername(username);
 
     if (!user) {
-      throw new Error('Usuário não encontrado');
-    }*/
-   const user = await this.userRepository.findByUsername(username);
-
-    if (!user) {
-      throw new Error('Usuário não encontrado');
+      throw new Error("Usuário não encontrado");
     }
 
-    const validPassword = await this.passwordHasher.compare(password, user.password);
+    const validPassword = await this.passwordHasher.compare(
+      password,
+      user.password,
+    );
 
     if (!validPassword) {
-      throw new Error('Senha inválida');
+      throw new Error("Senha inválida");
     }
 
-    return this.jwtService.sign({
+    const token = this.jwtService.sign({
       username: user.username,
-      role: user.role
+      role: user.role,
     });
+
+    return {
+      token,
+      role: user.role,
+      username: user.username,
+    };
   }
 }
 

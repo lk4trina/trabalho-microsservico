@@ -11,7 +11,7 @@ class AuthController {
       return res.status(201).json({
         username: user.username,
         role: user.role,
-        message: 'Usuário criado com sucesso'
+        message: "Usuário criado com sucesso",
       });
     } catch (error) {
       return res.status(400).json({ error: error.message });
@@ -20,12 +20,12 @@ class AuthController {
 
   login = async (req, res) => {
     try {
-      const token = await this.loginUser.execute(req.body);
-      return res.json({ token });
+      const result = await this.loginUser.execute(req.body);
+
+      return res.json(result);
     } catch (error) {
       return res.status(401).json({ error: error.message });
     }
   };
 }
-
 module.exports = AuthController;
