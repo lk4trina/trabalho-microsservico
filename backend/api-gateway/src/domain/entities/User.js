@@ -9,7 +9,7 @@ class User {
     }
 
     if (!['ADMIN', 'USER'].includes(role)) {
-      throw new Error('Role inválida');
+      throw new Error('Tipo de usuário inválido');
     }
 
     this.username = username;
