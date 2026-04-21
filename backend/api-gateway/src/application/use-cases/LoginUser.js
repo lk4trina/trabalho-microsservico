@@ -6,7 +6,12 @@ class LoginUser {
   }
 
   async execute({ username, password }) {
-    const user = this.userRepository.findByUsername(username);
+    /*const user = this.userRepository.findByUsername(username);
+
+    if (!user) {
+      throw new Error('Usuário não encontrado');
+    }*/
+   const user = await this.userRepository.findByUsername(username);
 
     if (!user) {
       throw new Error('Usuário não encontrado');

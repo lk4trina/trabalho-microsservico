@@ -3,8 +3,9 @@ class ListAllRooms {
     this.roomRepository = roomRepository;
   }
 
-  execute() {
-    return this.roomRepository.findAll();
+  async execute() {
+    //return this.roomRepository.findAll();
+    return await this.roomRepository.findAll();
   }
 }
 

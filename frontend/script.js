@@ -19,12 +19,40 @@ function logout() {
   window.location.href = "login.html";
 }
 
+// CADASTRO
+async function cadastrar() {
+ // const name = document.getElementById("reg-name").value;
+  const username = document.getElementById("reg-user").value;
+  const password = document.getElementById("reg-pass").value;
+  const confirmPass = document.getElementById("reg-pass-confirm").value;
+
+ 
+  if (password !== confirmPass) {
+    alert("As senhas não coincidem!");
+    return;
+  }
+
+  const res = await fetch("http://localhost:3000/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+  });
+
+  if (res.ok) {
+    alert("Cadastro realizado com sucesso!");
+    window.location.href = "login.html";
+  } else {
+    const errorData = await res.json();
+    alert("Erro no cadastro: " + (errorData.error || "Tente outro usuário"));
+  }
+}
+
 // LOGIN
 async function login() {
   const username = document.getElementById("user").value;
   const password = document.getElementById("pass").value;
 
-  const res = await fetch("http://localhost:3002/login", {
+  const res = await fetch("http://localhost:3000/login", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({ username, password })
@@ -86,7 +114,7 @@ async function loadRooms() {
     return;
   }
 
-  const res = await fetch("http://localhost:3002/rooms", {
+  const res = await fetch("http://localhost:3000/rooms", {
     headers: {
       Authorization: "Bearer " + token
     }
@@ -103,7 +131,7 @@ async function createRoom() {
   const name = document.getElementById("roomName").value;
   const capacity = document.getElementById("capacity").value;
 
-  const res = await fetch("http://localhost:3002/rooms", {
+  const res = await fetch("http://localhost:3000/rooms", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -123,7 +151,7 @@ async function createRoom() {
 async function toggleRoom(id, button) {
   const token = getToken();
 
-  const res = await fetch(`http://localhost:3002/rooms/${id}/toggle`, {
+  const res = await fetch(`http://localhost:3000/rooms/${id}/toggle`, {
     method: "PATCH",
     headers: {
       Authorization: "Bearer " + token
