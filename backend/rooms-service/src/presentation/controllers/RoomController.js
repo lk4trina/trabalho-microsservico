@@ -1,7 +1,8 @@
 class RoomController {
-  constructor(createRoom, listAllRooms, toggleRoomStatus) {
+  constructor(createRoom, listAllRooms, listActiveRooms, toggleRoomStatus) {
     this.createRoom = createRoom;
     this.listAllRooms = listAllRooms;
+    this.listActiveRooms = listActiveRooms;
     this.toggleRoomStatus = toggleRoomStatus;
   }
 
@@ -15,9 +16,18 @@ class RoomController {
   };
 
   list = async (req, res) => {
+    console.log(req.user);
     try {
-      const rooms = await this.listAllRooms.execute();
-      return res.json(rooms);
+      const user = req.user;
+
+      // 🔥 DECISÃO POR ROLE
+      if (user.role === "ADMIN") {
+        const rooms = await this.listAllRooms.execute();
+        return res.json(rooms);
+      } else {
+        const rooms = await this.listActiveRooms.execute();
+        return res.json(rooms);
+      }
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
@@ -27,14 +37,12 @@ class RoomController {
     try {
       const room = await this.toggleRoomStatus.execute(req.params.id);
 
-      // 🔥 retorno garantido pro front
       return res.json({
         id: room.id,
         name: room.name,
         capacity: room.capacity,
         active: room.active,
       });
-
     } catch (error) {
       return res.status(404).json({ error: error.message });
     }

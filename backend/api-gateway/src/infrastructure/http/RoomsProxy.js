@@ -1,23 +1,28 @@
-const axios = require('axios');
+const axios = require("axios");
 
 class RoomsProxy {
   constructor(baseURL) {
     this.client = axios.create({ baseURL });
   }
 
-  async getRooms() {
-    const response = await this.client.get('/rooms');
+  async getRooms(token) {
+    const response = await this.client.get("/rooms", {
+      headers: {
+        Authorization: token,
+      },
+    });
+
     return response.data;
   }
 
   async createRoom(data) {
-  const response = await this.client.post('/rooms', data);
-  return response.data;
+    const response = await this.client.post("/rooms", data);
+    return response.data;
   }
 
   async toggleRoom(id) {
-  const response = await this.client.patch(`/rooms/${id}/toggle`);
-  return response.data;
+    const response = await this.client.patch(`/rooms/${id}/toggle`);
+    return response.data;
   }
 }
 

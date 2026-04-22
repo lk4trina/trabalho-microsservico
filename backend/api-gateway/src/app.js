@@ -1,6 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-const roleMiddleware = require('./presentation/middlewares/roleMiddleware');
+const express = require("express");
+const cors = require("cors");
+const roleMiddleware = require("./presentation/middlewares/roleMiddleware");
 
 //const InMemoryUserRepository = require('./infrastructure/repositories/InMemoryUserRepository');
 const SqlUserRepository = require('./infrastructure/repositories/SqlUserRepository');
@@ -9,9 +9,9 @@ const JwtService = require('./infrastructure/security/JWTService');
 const RoomsProxy = require('./infrastructure/http/RoomsProxy');
 const BookingsProxy = require('./infrastructure/http/BookingsProxy');
 
-const RegisterUser = require('./application/use-cases/RegisterUser');
-const LoginUser = require('./application/use-cases/LoginUser');
-const ValidateToken = require('./application/use-cases/ValidateToken');
+const RegisterUser = require("./application/use-cases/RegisterUser");
+const LoginUser = require("./application/use-cases/LoginUser");
+const ValidateToken = require("./application/use-cases/ValidateToken");
 
 const AuthController = require('./presentation/controllers/AuthController');
 const RoomsGatewayController = require('./presentation/controllers/RoomsGatewayController');
@@ -48,13 +48,13 @@ app.use(bookingsRoutes(bookingsGatewayController, authMiddleware));
 
 
 
-const sequelize = require('./infrastructure/database/sequelize'); 
-const User = require('./infrastructure/database/models/UserModel'); 
+const sequelize = require("./infrastructure/database/sequelize");
+const User = require("./infrastructure/database/models/UserModel");
 
 async function inicializarBanco() {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({ alter: true }); 
+    await sequelize.sync({ alter: true });
     console.log("Tabelas criadas/sincronizadas com sucesso!");
   } catch (error) {
     console.error("Erro ao sincronizar banco:", error);
