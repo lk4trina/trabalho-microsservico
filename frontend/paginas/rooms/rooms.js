@@ -201,6 +201,14 @@ function toggleSidebar() {
   if (sidebar) sidebar.classList.toggle("collapsed");
 }
 
+function myBookings(){
+  if (data.role === "ADMIN") {
+    window.location.href = "../admin/admin.html";
+  } else {
+    window.location.href = "../user/user.html";
+  }
+}
+
 // INIT
 window.onload = () => {
   loadRooms();

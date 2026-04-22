@@ -1,4 +1,5 @@
 const BASE_URL = "http://localhost:3000";
+const BFF_URL = "http://localhost:3003";
 
 // AUTH
 export async function loginRequest(data) {
@@ -40,6 +41,28 @@ export async function toggleRoomRequest(id, token) {
     method: "PATCH",
     headers: {
       Authorization: "Bearer " + token
+    }
+  });
+}
+
+// BOOKINGS (Via Gateway - Porta 3000)
+export async function createBookingRequest(data, token) {
+  return fetch(`${BASE_URL}/bookings`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token
+    },
+    body: JSON.stringify(data)
+  });
+}
+
+// DASHBOARD/BFF (Via BFF - Porta 3003)
+export async function getMyBookings(token) {
+  return fetch(`${BFF_URL}/dashboard/my-bookings`, {
+    method: "GET",
+    headers: { 
+      Authorization: "Bearer " + token 
     }
   });
 }
