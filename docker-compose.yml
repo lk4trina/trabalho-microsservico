@@ -33,6 +33,21 @@ services:
       db:
         condition: service_healthy
 
+  bookings-service:
+    build: /backend/bookings-service
+    container_name: bookings_service
+    ports:
+      - "3004:3004"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASS=P@ulinha2003
+    depends_on:
+      db:
+        condition: service_healthy
+
   api-gateway:
     build: /backend/api-gateway
     container_name: api_gateway
@@ -48,6 +63,17 @@ services:
       db:
         condition: service_healthy
       rooms-service:
+        condition: service_started
+      bookings-service:
+        condition: service_started
+
+  back-for-front:
+    build: /backend/back-for-front
+    container_name: back_for_front
+    ports:
+      - "3003:3003"
+    depends_on:
+      api-gateway:
         condition: service_started
 
 volumes:
