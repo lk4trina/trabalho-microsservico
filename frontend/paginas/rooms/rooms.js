@@ -201,14 +201,6 @@ function toggleSidebar() {
   if (sidebar) sidebar.classList.toggle("collapsed");
 }
 
-function myBookings(){
-  //if (data.role === "ADMIN") {
-    window.location.href = "../bookings/booking.html";
- // } else {
-  //  window.location.href = "../user/user.html";
- // }
-}
-
 // INIT
 window.onload = () => {
   loadRooms();
@@ -222,4 +214,3 @@ window.openModal = openModal;
 window.closeModal = closeModal;
 window.toggleSidebar = toggleSidebar;
 window.logout = logout;
-window.myBookings = myBookings;
