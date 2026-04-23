@@ -202,11 +202,11 @@ function toggleSidebar() {
 }
 
 function myBookings(){
-  if (data.role === "ADMIN") {
-    window.location.href = "../admin/admin.html";
-  } else {
-    window.location.href = "../user/user.html";
-  }
+  //if (data.role === "ADMIN") {
+    window.location.href = "../bookings/booking.html";
+ // } else {
+  //  window.location.href = "../user/user.html";
+ // }
 }
 
 // INIT
@@ -222,3 +222,4 @@ window.openModal = openModal;
 window.closeModal = closeModal;
 window.toggleSidebar = toggleSidebar;
 window.logout = logout;
+window.myBookings = myBookings;
