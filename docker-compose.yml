@@ -37,7 +37,7 @@ services:
     build: /backend/bookings-service
     container_name: bookings_service
     ports:
-      - "3004:3004"
+      - "3001:3001"
     environment:
       - DB_HOST=db
       - DB_PORT=5432
