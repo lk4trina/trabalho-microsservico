@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
@@ -6,29 +6,35 @@
     <link rel="stylesheet" href="../../styles/index.css" />
     <link rel="stylesheet" href="../rooms/rooms.css" />
     <link rel="stylesheet" href="./booking.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
   </head>
 
-<div id="create-modal" class="modal hidden">
-  <div class="modal-content">
-    <h2>Nova Reserva</h2>
-    
-    <label for="roomSelect">Escolher Sala:</label>
-    <select id="roomSelect">
-        </select>
-    
-    <label for="createStartTime">Início:</label>
-    <input id="createStartTime" type="datetime-local" />
-    
-    <label for="createEndTime">Fim:</label>
-    <input id="createEndTime" type="datetime-local" />
-    
-    <div class="modal-buttons">
-        <button onclick="saveNewBooking()" class="btn-primary">Confirmar</button>
-        <button onclick="closeCreateModal()" class="btn-secondary">Cancelar</button>
+  <div id="create-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Nova Reserva</h2>
+
+      <label for="roomSelect">Escolher Sala:</label>
+      <select id="roomSelect"></select>
+
+      <label for="createStartTime">Início:</label>
+      <input id="createStartTime" type="datetime-local" />
+
+      <label for="createEndTime">Fim:</label>
+      <input id="createEndTime" type="datetime-local" />
+
+      <div class="modal-buttons">
+        <button onclick="saveNewBooking()" class="btn-primary">
+          Confirmar
+        </button>
+        <button onclick="closeCreateModal()" class="btn-secondary">
+          Cancelar
+        </button>
+      </div>
     </div>
   </div>
-</div>
 
   <body>
     <div class="container">
@@ -45,13 +51,10 @@
           <span>Ver Salas</span>
         </button>
 
-
-<button id="btn-open-create">
-  <i class="fa fa-plus"></i>
-  <span>Nova Reserva</span>
-</button>
-
-
+        <button id="btn-open-create">
+          <i class="fa fa-plus"></i>
+          <span>Nova Reserva</span>
+        </button>
 
         <button onclick="logout()">
           <i class="fas fa-sign-out"></i>
@@ -61,31 +64,32 @@
 
       <div class="main">
         <header>
-            <h2>Minhas Reservas</h2>
+          <h2>Minhas Reservas</h2>
         </header>
 
-        <div id="bookings-list" class="rooms">
-            </div>
+        <div id="bookings-list" class="rooms"></div>
       </div>
     </div>
 
-<div id="edit-modal" class="modal hidden">
-  <div class="modal-content">
-    <h2>Editar Horário</h2>
-    <p id="edit-room-name"></p>
-    
-    <label for="editStartTime">Início:</label>
-    <input id="editStartTime" type="datetime-local" /> 
-    
-    <label for="editEndTime">Fim:</label>
-    <input id="editEndTime" type="datetime-local" />
-    
-    <div class="modal-buttons">
-        <button id="btn-save-edit" class="btn-primary">Salvar</button>
-        <button onclick="closeEditModal()" class="btn-secondary">Cancelar</button>
+    <div id="edit-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Editar Horário</h2>
+        <p id="edit-room-name"></p>
+
+        <label for="editStartTime">Início:</label>
+        <input id="editStartTime" type="datetime-local" />
+
+        <label for="editEndTime">Fim:</label>
+        <input id="editEndTime" type="datetime-local" />
+
+        <div class="modal-buttons">
+          <button id="btn-save-edit" class="btn-primary">Salvar</button>
+          <button onclick="closeEditModal()" class="btn-secondary">
+            Cancelar
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
     <script type="module" src="./booking.js"></script>
   </body>

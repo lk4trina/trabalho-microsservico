@@ -15,13 +15,25 @@ class RoomsProxy {
     return response.data;
   }
 
-  async createRoom(data) {
-    const response = await this.client.post("/rooms", data);
+  async createRoom(data, token) {
+    const response = await this.client.post("/rooms", data, {
+      headers: {
+        Authorization: token,
+      },
+    });
     return response.data;
   }
 
-  async toggleRoom(id) {
-    const response = await this.client.patch(`/rooms/${id}/toggle`);
+  async toggleRoom(id, token) {
+    const response = await this.client.patch(
+      `/rooms/${id}/toggle`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      },
+    );
     return response.data;
   }
 }

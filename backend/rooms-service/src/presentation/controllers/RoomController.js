@@ -16,11 +16,13 @@ class RoomController {
   };
 
   list = async (req, res) => {
-    console.log(req.user);
     try {
       const user = req.user;
 
-      // 🔥 DECISÃO POR ROLE
+      if (!user) {
+        return res.status(401).json({ error: "Não autenticado" });
+      }
+
       if (user.role === "ADMIN") {
         const rooms = await this.listAllRooms.execute();
         return res.json(rooms);
@@ -29,6 +31,7 @@ class RoomController {
         return res.json(rooms);
       }
     } catch (error) {
+      console.error("Erro real:", error);
       return res.status(500).json({ error: error.message });
     }
   };
