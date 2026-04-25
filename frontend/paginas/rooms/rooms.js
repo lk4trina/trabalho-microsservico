@@ -78,6 +78,16 @@ function renderRooms() {
   `
       : ""
   }
+
+${
+  role === "USER" && isUserPage() && room.active
+    ? `
+    <button class="btn-room" onclick="goToBooking(${room.id}, '${room.name}')">
+      Reservar
+    </button>
+  `
+    : ""
+}
 `;
 
     container.appendChild(div);
@@ -307,6 +317,13 @@ function myBookings() {
   window.location.href = "../bookings/booking.html";
 }
 
+function goToBooking(roomId, roomName) {
+  localStorage.setItem("selectedRoomId", roomId);
+  localStorage.setItem("selectedRoomName", roomName);
+
+  window.location.href = "../bookings/booking.html";
+}
+
 // INIT
 window.onload = () => {
   loadRooms();
@@ -325,3 +342,4 @@ window.closeModal = closeModal;
 window.toggleSidebar = toggleSidebar;
 window.logout = logout;
 window.myBookings = myBookings;
+window.goToBooking = goToBooking;
