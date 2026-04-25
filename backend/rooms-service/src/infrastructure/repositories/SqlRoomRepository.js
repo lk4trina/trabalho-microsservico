@@ -13,19 +13,28 @@ class SqlRoomRepository {
     return await Room.findByPk(id);
   }
 
-  async update(updatedRoom) {
-    const room = await Room.findByPk(updatedRoom.id);
+  async update(id, data) {
+    const room = await Room.findByPk(id);
 
     if (!room) return null;
 
-    // 🔥 atualiza campos
-    room.name = updatedRoom.name;
-    room.capacity = updatedRoom.capacity;
-    room.active = updatedRoom.active;
+    if (data.name !== undefined) room.name = data.name;
+    if (data.capacity !== undefined) room.capacity = data.capacity;
+    if (data.active !== undefined) room.active = data.active;
 
     await room.save();
 
     return room;
+  }
+
+  async delete(id) {
+    const room = await Room.findByPk(id);
+
+    if (!room) return null;
+
+    await room.destroy();
+
+    return true;
   }
 }
 

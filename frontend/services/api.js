@@ -6,7 +6,7 @@ export async function loginRequest(data) {
   return fetch(`${BASE_URL}/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   });
 }
 
@@ -14,14 +14,14 @@ export async function registerRequest(data) {
   return fetch(`${BASE_URL}/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   });
 }
 
 // ROOMS
 export async function getRooms(token) {
   return fetch(`${BASE_URL}/rooms`, {
-    headers: { Authorization: "Bearer " + token }
+    headers: { Authorization: "Bearer " + token },
   });
 }
 
@@ -30,40 +30,63 @@ export async function createRoomRequest(data, token) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + token
+      Authorization: "Bearer " + token,
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   });
 }
 
+// UPDATE ROOM
+export async function updateRoomRequest(id, data, token) {
+  return fetch(`${BASE_URL}/rooms/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+    body: JSON.stringify(data),
+  });
+}
+
+// DELETE ROOM
+export async function deleteRoomRequest(id, token) {
+  return fetch(`${BASE_URL}/rooms/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+}
+
+// TOGGLE
 export async function toggleRoomRequest(id, token) {
   return fetch(`${BASE_URL}/rooms/${id}/toggle`, {
     method: "PATCH",
     headers: {
-      Authorization: "Bearer " + token
-    }
+      Authorization: "Bearer " + token,
+    },
   });
 }
 
-// BOOKINGS (Via Gateway - Porta 3000)
+// BOOKINGS
 export async function createBookingRequest(data, token) {
   return fetch(`${BASE_URL}/bookings`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + token
+      Authorization: "Bearer " + token,
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   });
 }
 
-// DASHBOARD/BFF (Via BFF - Porta 3003)
+// BFF
 export async function getMyBookings(token) {
   return fetch(`${BFF_URL}/dashboard/my-bookings`, {
     method: "GET",
-    headers: { 
-      Authorization: "Bearer " + token 
-    }
+    headers: {
+      Authorization: "Bearer " + token,
+    },
   });
 }
 
@@ -71,8 +94,8 @@ export async function cancelBookingRequest(id, token) {
   return fetch(`${BASE_URL}/bookings/${id}/cancel`, {
     method: "PATCH",
     headers: {
-      Authorization: "Bearer " + token
-    }
+      Authorization: "Bearer " + token,
+    },
   });
 }
 

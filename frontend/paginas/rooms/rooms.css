@@ -5,8 +5,9 @@
 }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   background: var(--bg-color);
+  color: var(--font-color-dark);
 }
 
 /* CARD */
@@ -14,57 +15,56 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-
   background: var(--card-color);
-
+  box-shadow: 0 5px 15px var(--card-shadow);
   padding: 25px;
   border-radius: 15px;
   width: 280px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* input e button */
-
-#roomName, #capacity {
+/* INPUTS */
+#roomName,
+#capacity,
+#editRoomName,
+#editCapacity {
   width: 100%;
   height: 2.5rem;
   margin: 0.4rem 0;
-
-  background-color: var(--bg-color);
-
-  border: 1px solid var(--contr-color);
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 0.4rem;
-
   text-align: center;
-  font-weight: 400;
-  color: var(--contr-color);
+  color: var(--input-text);
 }
 
 #roomName {
   margin-top: 1rem;
 }
 
+input[type="number"] {
+  padding: 0 12px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  margin-right: 5px;
+}
+
+/* BOTÃO PRINCIPAL */
 #btn-create {
   width: 100%;
   padding: 10px;
-
   border: none;
-
   background: var(--contr-color);
-  color: var(--bg-color);
+  color: var(--btn-text);
   border-radius: 8px;
-
   margin-top: 1rem;
-
   cursor: pointer;
-
-  transition: 0.4s ease;
+  transition: 0.3s;
 }
 
-#btn-create:hover{
-  background-color: var(--btn-primary);
-
-  color: var(--contr-color);
+#btn-create:hover {
+  background-color: var(--btn-hover);
 }
 
 /* LAYOUT */
@@ -73,27 +73,16 @@ body {
   height: 100vh;
 }
 
-/* sidebar */
-
+/* SIDEBAR */
 .sidebar {
   width: 16rem;
   height: 100vh;
-
   position: fixed;
   top: 0;
   left: 0;
-
   background: var(--side-color);
-
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
-  border-right: 1px solid rgba(255,255,255,0.1);
-
-  color: var(--card-color);
-
+  color: var(--side-text);
   padding: 20px;
-
   transition: width 0.3s ease;
 }
 
@@ -101,43 +90,28 @@ body {
   width: 100%;
   margin-top: 10px;
   padding: 10px;
-
   display: flex;
   align-items: center;
   gap: 10px;
-
-  border: 1px solid rgba(255,255,255,0.2);
-
+  border: none;
   background: var(--side-btn);
-  color: var(--font-color-lgt);
-
+  color: var(--side-text);
   border-radius: 8px;
   cursor: pointer;
-
-  transition: 0.3s ease;
+  transition: 0.3s;
 }
 
 .sidebar button:hover {
   background: var(--side-btn-hvr);
 }
 
-/* TRANSIÇÃO */
-.sidebar {
-  transition: width 0.3s ease;
-}
-
+/* COLLAPSE */
 .sidebar.collapsed {
   width: 5rem;
 }
 
 .sidebar.collapsed .menu-title {
   display: none;
-}
-
-.sidebar button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .sidebar.collapsed button span {
@@ -148,39 +122,19 @@ body {
   justify-content: center;
 }
 
-.sidebar.collapsed .toggle-btn {
-  font-size: 16px;
-}
-
-/* ÍCONES */
-.sidebar.collapsed button::before {
-  font-size: 16px;
-}
-
-/* BOTÃO TOGGLE */
-.toggle-btn {
-  width: 100%;
-  margin-bottom: 15px;
-  padding: 10px;
-  cursor: pointer;
-}
-
-/* AJUSTE MAIN */
+/* MAIN */
 .main {
-  transition: margin-left 0.3s ease;
+  flex: 1;
+  margin-left: 16rem;
+  padding: 30px;
+  transition: margin-left 0.3s;
 }
 
 .sidebar.collapsed ~ .main {
   margin-left: 5rem;
 }
 
-.main {
-  flex: 1;
-  margin-left: 16rem;
-  padding: 30px;
-}
-
-/* ROOMS */
+/* ROOMS GRID */
 .rooms {
   display: grid;
   grid-template-columns: repeat(auto-fill, 220px);
@@ -188,141 +142,139 @@ body {
   margin-top: 20px;
 }
 
+/* ROOM CARD */
 .room-card {
   background-color: var(--room-color);
+  border: 1px solid var(--room-border);
+  box-shadow: 0 5px 15px var(--card-shadow);
   padding: 15px;
   border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-
-   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-
-  border: 1px solid var(--border-lgt);
+  position: relative;
+  transition: 0.3s;
 }
 
+/* HEADER COM ÍCONES */
+.room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.room-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ÍCONES */
+.icon {
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.icon.edit {
+  color: var(--icon-edit);
+}
+
+.icon.delete {
+  color: var(--icon-delete);
+}
+
+.icon:hover {
+  transform: scale(1.2);
+}
+
+/* BOTÃO ROOM */
 .btn-room {
   margin-top: 10px;
   width: 100%;
   padding: 8px;
-
   border: none;
-
   background: var(--btn-primary);
   color: var(--contr-color);
-
   border-radius: 8px;
-
   cursor: pointer;
-  transition: 0.4s ease;
+  transition: 0.3s;
 }
 
 .btn-room:hover {
-  background-color: var(--contr-color);
-  color: var(--btn-primary);
+  background: var(--contr-color);
+  color: var(--btn-text);
 }
 
+/* FILTER */
 .filter button {
   margin-top: 10px;
   width: 5rem;
   padding: 8px;
-
   border: none;
-
   background: var(--btn-primary);
   color: var(--contr-color);
-
   border-radius: 8px;
-
   cursor: pointer;
-  transition: 0.4s ease;
+  transition: 0.3s;
 }
 
 .filter button:hover {
-  background-color: var(--contr-color);
-  color: var(--btn-primary);
+  background: var(--contr-color);
+  color: var(--btn-text);
 }
 
-.room-card {
-  transition: opacity 0.3s ease;
-}
-
+/* INATIVO */
 .room-card.inactive {
   opacity: 0.4;
 }
 
-/* popup */
-
+/* MODAL FUNDO */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
-
   width: 100%;
   height: 100%;
-
-  background: rgba(0,0,0,0.25);
-
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-
+  background: var(--modal-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
-
   z-index: 1000;
 }
 
-/* cnt popup */
-
+/* MODAL CARD */
 .modal-content {
-  background: var(--room-color);
-
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
+  background: var(--modal-bg);
   border-radius: 16px;
   padding: 25px;
   width: 300px;
-
-  border: 1px solid var(--border-lgt);
-
-  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* btn popup */
-
+/* BOTÕES MODAL */
 .modal-content button {
   width: 100%;
   margin-top: 10px;
   padding: 10px;
-
   border: none;
   border-radius: 8px;
-
+  background: var(--btn-primary);
+  color: var(--contr-color);
   cursor: pointer;
   transition: 0.3s;
 }
 
-.modal-content button {
-  background: rgba(255,255,255,0.2);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: var(--font-color-lgt);
-}
-
 .modal-content button:hover {
-  background: rgba(255,255,255,0.4);
+  background: var(--contr-color);
+  color: var(--btn-text);
 }
 
-/* hide */
-
+/* HIDE */
 .hidden {
   display: none;
 }
 
+/* ANIMAÇÃO */
 .modal {
   animation: fadeIn 0.2s ease;
 }
@@ -332,11 +284,19 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scaleIn {
-  from { transform: scale(0.9); }
-  to { transform: scale(1); }
+  from {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1);
+  }
 }

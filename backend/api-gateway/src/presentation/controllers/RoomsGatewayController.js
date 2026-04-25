@@ -34,6 +34,30 @@ class RoomsGatewayController {
     }
   };
 
+  update = async (req, res) => {
+    try {
+      const token = req.headers.authorization;
+      const room = await this.roomsProxy.updateRoom(
+        req.params.id,
+        req.body,
+        token,
+      );
+      return res.json(room);
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao atualizar sala" });
+    }
+  };
+
+  delete = async (req, res) => {
+    try {
+      const token = req.headers.authorization;
+      const result = await this.roomsProxy.deleteRoom(req.params.id, token);
+      return res.json(result);
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao remover sala" });
+    }
+  };
+
   toggle = async (req, res) => {
     try {
       const token = req.headers.authorization;

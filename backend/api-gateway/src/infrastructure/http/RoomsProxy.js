@@ -24,6 +24,24 @@ class RoomsProxy {
     return response.data;
   }
 
+  async updateRoom(id, data, token) {
+    const response = await this.client.put(`/rooms/${id}`, data, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    return response.data;
+  }
+
+  async deleteRoom(id, token) {
+    const response = await this.client.delete(`/rooms/${id}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    return response.data;
+  }
+
   async toggleRoom(id, token) {
     const response = await this.client.patch(
       `/rooms/${id}/toggle`,

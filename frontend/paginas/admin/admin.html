@@ -28,7 +28,7 @@
         <button onclick="myBookings()">
           <i class="fa fa-calendar-check"></i>
           <span>Minhas Reservas</span>
-        </button>        
+        </button>
 
         <button onclick="logout()">
           <i class="fas fa-sign-out"></i>
@@ -47,6 +47,7 @@
       </div>
     </div>
 
+    <!-- ✅ MODAL DE CRIAR -->
     <div id="modal" class="modal hidden">
       <div class="modal-content">
         <h2>Criar Sala</h2>
@@ -54,6 +55,17 @@
         <input id="capacity" type="number" placeholder="Capacidade" />
         <button onclick="createRoom()">Criar</button>
         <button onclick="closeModal()">Cancelar</button>
+      </div>
+    </div>
+
+    <div id="editModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Editar Sala</h2>
+        <input id="editRoomName" placeholder="Nome da sala" />
+        <input id="editCapacity" type="number" placeholder="Capacidade" />
+
+        <button onclick="confirmEdit()">Salvar</button>
+        <button onclick="closeEditModal()">Cancelar</button>
       </div>
     </div>
 

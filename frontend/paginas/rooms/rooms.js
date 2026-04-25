@@ -2,6 +2,8 @@ import {
   getRooms,
   createRoomRequest,
   toggleRoomRequest,
+  updateRoomRequest,
+  deleteRoomRequest,
 } from "../../services/api.js";
 
 import { getToken, logout, getRole } from "../../utils/auth.js";
@@ -49,18 +51,34 @@ function renderRooms() {
     }
 
     div.innerHTML = `
-      <h3>${room.name}</h3>
-      <p>Capacidade: ${room.capacity ?? "-"}</p>
-      <p>Status: ${room.active ? "Ativa" : "Inativa"}</p>
+  <div class="room-header">
+    <h3>${room.name}</h3>
 
-      ${
-        role === "ADMIN" && isAdminPage()
-          ? `<button class="btn-room" onclick="toggleRoom(${room.id})">
-              ${room.active ? "Desativar" : "Ativar"}
-            </button>`
-          : ""
-      }
-    `;
+    ${
+      role === "ADMIN" && isAdminPage()
+        ? `
+      <div class="room-actions">
+        <i class="fa fa-pen icon edit" onclick="openEditModal(${room.id})"></i>
+        <i class="fa fa-trash icon delete" onclick="deleteRoom(${room.id})"></i>
+      </div>
+    `
+        : ""
+    }
+  </div>
+
+  <p>Capacidade: ${room.capacity ?? "-"}</p>
+  <p>Status: ${room.active ? "Ativa" : "Inativa"}</p>
+
+  ${
+    role === "ADMIN" && isAdminPage()
+      ? `
+    <button class="btn-room" onclick="toggleRoom(${room.id})">
+      ${room.active ? "Desativar" : "Ativar"}
+    </button>
+  `
+      : ""
+  }
+`;
 
     container.appendChild(div);
   });
@@ -94,7 +112,6 @@ async function loadRooms() {
     const data = await res.json();
 
     if (!res.ok) {
-      console.error("Erro ao buscar salas:", data);
       alert(data.error || "Erro ao buscar salas");
       return;
     }
@@ -102,7 +119,7 @@ async function loadRooms() {
     allRooms = data;
     renderRooms();
   } catch (error) {
-    console.error("Erro de rede ao buscar salas:", error);
+    console.error(error);
     alert("Erro ao buscar salas");
   }
 }
@@ -113,7 +130,7 @@ async function createRoom() {
   const role = getRole();
 
   if (role !== "ADMIN") {
-    alert("Você não tem permissão para criar salas");
+    alert("Você não tem permissão");
     return;
   }
 
@@ -134,7 +151,7 @@ async function createRoom() {
     const data = await res.json();
 
     if (!res.ok) {
-      alert(data.error || "Erro ao criar sala");
+      alert(data.error);
       return;
     }
 
@@ -142,27 +159,115 @@ async function createRoom() {
     renderRooms();
     closeModal();
   } catch (error) {
-    console.error("Erro ao criar sala:", error);
-    alert("Erro de conexão ao criar sala");
+    console.error(error);
+    alert("Erro ao criar sala");
+  }
+}
+
+// UPDATE
+async function updateRoom(id) {
+  const token = getToken();
+
+  const name = document.getElementById("editRoomName").value;
+  const capacity = document.getElementById("editCapacity").value;
+
+  if (!name || !capacity) {
+    alert("Preencha os campos");
+    return;
+  }
+
+  try {
+    const res = await updateRoomRequest(
+      id,
+      { name, capacity: Number(capacity) },
+      token,
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error);
+      return;
+    }
+
+    const room = allRooms.find((r) => r.id === Number(id));
+    if (room) {
+      room.name = data.name;
+      room.capacity = data.capacity;
+    }
+
+    renderRooms();
+    closeEditModal();
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao editar sala");
+  }
+}
+
+// DELETE
+async function deleteRoom(id) {
+  const token = getToken();
+
+  if (!confirm("Tem certeza que deseja excluir?")) return;
+
+  try {
+    const res = await deleteRoomRequest(id, token);
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error);
+      return;
+    }
+
+    allRooms = allRooms.filter((r) => r.id !== id);
+    renderRooms();
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao excluir sala");
+  }
+}
+
+// EDIT MODAL
+let editingRoomId = null;
+
+function openEditModal(id) {
+  const room = allRooms.find((r) => r.id === Number(id));
+  if (!room) return;
+
+  editingRoomId = id;
+
+  document.getElementById("editRoomName").value = room.name;
+  document.getElementById("editCapacity").value = room.capacity;
+
+  document.getElementById("editModal").classList.remove("hidden");
+}
+
+function closeEditModal() {
+  document.getElementById("editModal").classList.add("hidden");
+
+  document.getElementById("editRoomName").value = "";
+  document.getElementById("editCapacity").value = "";
+  document.getElementById("modal").classList.add("hidden");
+
+  editingRoomId = null;
+}
+
+function confirmEdit() {
+  if (editingRoomId) {
+    updateRoom(editingRoomId);
   }
 }
 
 // TOGGLE
 async function toggleRoom(id) {
   const token = getToken();
-  const role = getRole();
-
-  if (role !== "ADMIN") {
-    alert("Você não tem permissão");
-    return;
-  }
 
   try {
     const res = await toggleRoomRequest(id, token);
     const data = await res.json();
 
     if (!res.ok) {
-      alert(data.error || "Erro ao atualizar sala");
+      alert(data.error);
       return;
     }
 
@@ -173,8 +278,8 @@ async function toggleRoom(id) {
 
     renderRooms();
   } catch (error) {
-    console.error("Erro ao atualizar sala:", error);
-    alert("Erro de conexão ao atualizar sala");
+    console.error(error);
+    alert("Erro ao atualizar sala");
   }
 }
 
@@ -183,30 +288,23 @@ function openModal() {
   const role = getRole();
 
   if (role !== "ADMIN") {
-    alert("Você não tem permissão");
+    alert("Sem permissão");
     return;
   }
 
-  const modal = document.getElementById("modal");
-  if (modal) modal.classList.remove("hidden");
+  document.getElementById("modal")?.classList.remove("hidden");
 }
 
 function closeModal() {
-  const modal = document.getElementById("modal");
-  if (modal) modal.classList.add("hidden");
+  document.getElementById("modal")?.classList.add("hidden");
 }
 
 function toggleSidebar() {
-  const sidebar = document.getElementById("sidebar");
-  if (sidebar) sidebar.classList.toggle("collapsed");
+  document.getElementById("sidebar")?.classList.toggle("collapsed");
 }
 
-function myBookings(){
-  //if (data.role === "ADMIN") {
-    window.location.href = "../bookings/booking.html";
- // } else {
-  //  window.location.href = "../user/user.html";
- // }
+function myBookings() {
+  window.location.href = "../bookings/booking.html";
 }
 
 // INIT
@@ -214,10 +312,14 @@ window.onload = () => {
   loadRooms();
 };
 
-// EXPORTS GLOBAIS
+// EXPORTS
 window.setFilter = setFilter;
 window.createRoom = createRoom;
 window.toggleRoom = toggleRoom;
+window.deleteRoom = deleteRoom;
+window.openEditModal = openEditModal;
+window.closeEditModal = closeEditModal;
+window.confirmEdit = confirmEdit;
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.toggleSidebar = toggleSidebar;

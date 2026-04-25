@@ -1,3 +1,4 @@
+/* RESET */
 * {
   padding: 0;
   margin: 0;
@@ -7,6 +8,7 @@
 body {
   font-family: "Segoe UI", sans-serif;
   background: var(--bg-color);
+  color: var(--font-color-dark);
 }
 
 /* CENTRAL */
@@ -17,7 +19,8 @@ body {
   align-items: center;
 }
 
-/* CARD */
+/* CARD PADRÃO (LOGIN + REGISTER) */
+.card,
 .card-regst {
   display: flex;
   flex-direction: column;
@@ -26,53 +29,72 @@ body {
   width: 22rem;
   padding: 2.2rem;
 
-  border-radius: 0.4rem;
+  border-radius: 12px;
 
-  background-color: var(--card-color); /* 🔥 igual login */
+  background-color: var(--card-color);
+  box-shadow: 0 8px 20px var(--card-shadow);
 }
 
 /* TÍTULO */
+.card h2,
 .card-regst h2 {
-  margin-bottom: 0.8rem;
+  margin-bottom: 1rem;
+  color: var(--font-color-dark);
 }
 
 /* INPUTS */
-.card-regst input {
+#user,
+#pass,
+.card-regst input,
+.role-container select {
   width: 100%;
   height: 2.5rem;
   margin: 0.4rem 0;
 
-  background-color: var(--bg-color);
-
-  border: 1px solid var(--contr-color);
-  border-radius: 0.4rem;
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
 
   text-align: center;
-  font-weight: 400;
-  color: var(--contr-color);
+  color: var(--input-text);
+
+  transition: 0.2s;
 }
 
-/* BOTÃO */
+/* FOCUS BONITINHO */
+#user:focus,
+#pass:focus,
+.card-regst input:focus,
+.role-container select:focus {
+  outline: none;
+  border-color: var(--contr-color);
+  box-shadow: 0 0 0 2px rgba(238, 1, 140, 0.2);
+}
+
+/* BOTÕES */
+#btn-login,
 #btn-register {
   width: 100%;
   height: 2.5rem;
-  margin: 0.4rem 0;
+  margin-top: 0.6rem;
 
-  color: var(--bg-color);
-  background-color: var(--contr-color);
+  background: var(--contr-color);
+  color: var(--btn-text);
 
-  border-radius: 0.4rem;
   border: none;
+  border-radius: 8px;
 
   font-weight: bold;
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition: 0.3s;
 }
 
+/* HOVER */
+#btn-login:hover,
 #btn-register:hover {
-  background-color: var(--btn-primary);
-  height: 3rem;
+  background: var(--btn-hover);
+  transform: scale(1.03);
 }
 
 /* ROLE */
@@ -86,21 +108,7 @@ body {
 .role-container label {
   font-size: 0.85rem;
   margin-bottom: 4px;
-  color: var(--contr-color);
-}
-
-/* SELECT */
-.role-container select {
-  width: 100%;
-  height: 2.5rem;
-
-  background-color: var(--bg-color);
-
-  border: 1px solid var(--contr-color);
-  border-radius: 0.4rem;
-
-  text-align: center;
-  color: var(--contr-color);
+  color: var(--font-color-dark);
 }
 
 /* LINKS */
@@ -113,4 +121,8 @@ body {
   text-decoration: none;
   color: var(--contr-color);
   font-weight: bold;
+}
+
+.link-login a:hover {
+  text-decoration: underline;
 }
