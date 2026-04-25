@@ -17,14 +17,20 @@
       <div class="sidebar" id="sidebar">
         <button class="toggle-btn" onclick="toggleSidebar()">
           <i class="fa fa-bars"></i>
+          <span>Reduzir</span>
         </button>
 
-        <h2 class="menu-title">Usuário</h2>
+        <h2 class="menu-title">Menu</h2>
 
-        <button onclick="myBookings()">
+        <button onclick="goToRooms()">
+          <i class="fa fa-door-open"></i>
+          <span>Ver Salas</span>
+        </button>
+
+        <button onclick="myBookings()"">
           <i class="fa fa-calendar-check"></i>
-          <span>Minhas Reservas</span>
-        </button>          
+          <span>Nova Reserva</span>
+        </button>         
 
         <button onclick="logout()">
           <i class="fas fa-sign-out"></i>
