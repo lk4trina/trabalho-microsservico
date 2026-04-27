@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require("axios");
 
 class ApiGatewayProxy {
   constructor(baseURL) {
@@ -6,15 +6,23 @@ class ApiGatewayProxy {
   }
 
   async getUserBookings(token) {
-    const response = await this.client.get('/bookings/my', {
-      headers: { Authorization: token }
+    const response = await this.client.get("/bookings/my", {
+      headers: {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     });
     return response.data;
   }
 
   async getRooms(token) {
-    const response = await this.client.get('/rooms', {
-      headers: { Authorization: token }
+    const response = await this.client.get("/rooms", {
+      headers: {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     });
     return response.data;
   }

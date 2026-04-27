@@ -1,4 +1,4 @@
-class ToggleRoomStatus {
+class DeleteRoom {
   constructor(roomRepository) {
     this.roomRepository = roomRepository;
   }
@@ -10,12 +10,10 @@ class ToggleRoomStatus {
       throw new Error("Sala não encontrada");
     }
 
-    const updatedRoom = await this.roomRepository.update(id, {
-      active: !room.active,
-    });
+    await room.destroy();
 
-    return updatedRoom;
-  } 
+    return { message: "Sala removida com sucesso" };
+  }
 }
 
-module.exports = ToggleRoomStatus;
+module.exports = DeleteRoom;

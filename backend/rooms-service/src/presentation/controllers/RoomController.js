@@ -1,9 +1,18 @@
 class RoomController {
-  constructor(createRoom, listAllRooms, listActiveRooms, toggleRoomStatus) {
+  constructor(
+    createRoom,
+    listAllRooms,
+    listActiveRooms,
+    toggleRoomStatus,
+    updateRoom,
+    deleteRoom,
+  ) {
     this.createRoom = createRoom;
     this.listAllRooms = listAllRooms;
     this.listActiveRooms = listActiveRooms;
     this.toggleRoomStatus = toggleRoomStatus;
+    this.updateRoom = updateRoom;
+    this.deleteRoom = deleteRoom;
   }
 
   create = async (req, res) => {
@@ -12,6 +21,24 @@ class RoomController {
       return res.status(201).json(room);
     } catch (error) {
       return res.status(400).json({ error: error.message });
+    }
+  };
+
+  update = async (req, res) => {
+    try {
+      const room = await this.updateRoom.execute(req.params.id, req.body);
+      return res.json(room);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  };
+
+  delete = async (req, res) => {
+    try {
+      const result = await this.deleteRoom.execute(req.params.id);
+      return res.json(result);
+    } catch (error) {
+      return res.status(404).json({ error: error.message });
     }
   };
 

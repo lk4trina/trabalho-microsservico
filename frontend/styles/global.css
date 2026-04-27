@@ -1,12 +1,44 @@
 :root {
-    --bg-color: #f5e4eb;
-    --contr-color: #EE018C;
-    --btn-primary: #FABBD4;
-    --card-color: #fcf6fc;
-    --room-color: #fabbd462;
-    --font-color-lgt: #fbeffa;
-    --side-color: #ee018b56;
-    --side-btn: rgba(255,255,255,0.1);
-    --side-btn-hvr: rgba(255,255,255,0.2);
-    --border-lgt: rgba(255,255,255,0.2);
+  /* BASE */
+  --bg-color: #f5e4eb;
+  --contr-color: #ee018c;
+
+  /* BOTÕES */
+  --btn-primary: #fabbd4;
+  --btn-hover: #ee018c;
+  --btn-text: #ffffff;
+
+  /* CARDS */
+  --card-color: #fcf6fc;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+
+  /* ROOMS */
+  --room-color: #ffffffcc;
+  --room-border: #f3c1d9;
+
+  /* SIDEBAR */
+  --side-color: #d94c8a;
+  --side-btn: rgba(255, 255, 255, 0.08);
+  --side-btn-hvr: rgba(255, 255, 255, 0.18);
+  --side-text: #ffffff;
+
+  /* TEXTO */
+  --font-color-dark: #333333;
+  --font-color-light: #fbeffa;
+
+  /* INPUT */
+  --input-bg: #ffffff;
+  --input-border: #ee018c;
+  --input-text: #333;
+
+  /* MODAL */
+  --modal-bg: #fcf6fc;
+  --modal-overlay: rgba(0, 0, 0, 0.25);
+
+  /* ÍCONES */
+  --icon-edit: #ee018c;
+  --icon-delete: #ff4d6d;
+
+  /* OUTROS */
+  --border-lgt: rgba(255, 255, 255, 0.2);
 }

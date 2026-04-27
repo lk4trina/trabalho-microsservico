@@ -7,14 +7,28 @@ module.exports = (controller, authMiddleware, roleMiddleware) => {
     "/rooms",
     authMiddleware,
     roleMiddleware("ADMIN"),
-    controller.create
+    controller.create,
   );
 
   router.patch(
     "/rooms/:id/toggle",
     authMiddleware,
     roleMiddleware("ADMIN"),
-    controller.toggle
+    controller.toggle,
+  );
+
+  router.put(
+    "/rooms/:id",
+    authMiddleware,
+    roleMiddleware("ADMIN"),
+    controller.update,
+  );
+
+  router.delete(
+    "/rooms/:id",
+    authMiddleware,
+    roleMiddleware("ADMIN"),
+    controller.delete,
   );
 
   return router;

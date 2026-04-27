@@ -7,6 +7,8 @@ const CreateRoom = require("./application/use-cases/CreateRoom");
 const ListAllRooms = require("./application/use-cases/ListAllRooms");
 const ListActiveRooms = require("./application/use-cases/ListActiveRooms");
 const ToggleRoomStatus = require("./application/use-cases/ToggleRoomStatus");
+const UpdateRoom = require("./application/use-cases/UpdateRoom");
+const DeleteRoom = require("./application/use-cases/DeleteRoom");
 
 const RoomController = require("./presentation/controllers/RoomController");
 
@@ -20,19 +22,22 @@ app.use(cors());
 
 app.use(authMiddleware);
 
-
 const roomRepository = new SqlRoomRepository();
 
 const createRoom = new CreateRoom(roomRepository);
 const listAllRooms = new ListAllRooms(roomRepository);
 const listActiveRooms = new ListActiveRooms(roomRepository);
 const toggleRoomStatus = new ToggleRoomStatus(roomRepository);
+const updateRoom = new UpdateRoom(roomRepository);
+const deleteRoom = new DeleteRoom(roomRepository);
 
 const roomController = new RoomController(
   createRoom,
   listAllRooms,
   listActiveRooms,
-  toggleRoomStatus
+  toggleRoomStatus,
+  updateRoom,
+  deleteRoom,
 );
 
 app.use(roomRoutes(roomController));
