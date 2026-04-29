@@ -6,27 +6,32 @@ class BookingsProxy {
   }
 
 
-  getHeaders(userId) {
-    return { headers: { 'x-user-id': userId } };
+  getHeaders(userId, userRole) {
+    return { 
+      headers: { 
+        'x-user-id': userId,
+        'x-user-role': userRole 
+      } 
+    };
   }
 
-  async createBooking(data, userId) {
-    const response = await this.client.post('/bookings', data, this.getHeaders(userId));
+async createBooking(data, userId, userRole) {
+    const response = await this.client.post('/bookings', data, this.getHeaders(userId, userRole));
     return response.data;
   }
 
-  async getUserBookings(userId) {
-    const response = await this.client.get('/bookings/my', this.getHeaders(userId));
+  async getUserBookings(userId, userRole) {
+    const response = await this.client.get('/bookings/my', this.getHeaders(userId, userRole));
     return response.data;
   }
 
-  async editBooking(id, data, userId) {
-    const response = await this.client.put(`/bookings/${id}`, data, this.getHeaders(userId));
+  async editBooking(id, data, userId, userRole) {
+    const response = await this.client.put(`/bookings/${id}`, data, this.getHeaders(userId, userRole));
     return response.data;
   }
 
-  async cancelBooking(id, userId) {
-    const response = await this.client.patch(`/bookings/${id}/cancel`, {}, this.getHeaders(userId));
+  async deleteBooking(id, userId, userRole) {
+    const response = await this.client.delete(`/bookings/${id}`, this.getHeaders(userId, userRole));
     return response.data;
   }
 }

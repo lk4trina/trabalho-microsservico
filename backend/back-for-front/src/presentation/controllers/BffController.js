@@ -5,7 +5,7 @@ class BffController {
 
   getDashboardData = async (req, res) => {
     try {
-
+      // CORREÇÃO 1: Letras minúsculas no header!
       const token = req.headers['authorization']; 
       
       if (!token) {
@@ -16,7 +16,7 @@ class BffController {
       return res.json(data);
     } catch (error) {
       console.error(error);
-      const errorMsg = error.response?.data?.error || 'Erro interno no BFF';
+      const errorMsg = error.response?.data?.error || 'Erro interno do servidor (BFF)';
       return res.status(error.response?.status || 500).json({ error: errorMsg });
     }
   };

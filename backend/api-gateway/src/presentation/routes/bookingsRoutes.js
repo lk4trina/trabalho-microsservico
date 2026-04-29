@@ -7,7 +7,7 @@ module.exports = (bookingsGatewayController, authMiddleware) => {
   router.post('/bookings', authMiddleware, bookingsGatewayController.create);
   router.get('/bookings/my', authMiddleware, bookingsGatewayController.listUserBookings);
   router.put('/bookings/:id', authMiddleware, bookingsGatewayController.edit);
-  router.patch('/bookings/:id/cancel', authMiddleware, bookingsGatewayController.cancel);
+  router.delete('/bookings/:id', authMiddleware, bookingsGatewayController.delete);
 
   return router;
 };

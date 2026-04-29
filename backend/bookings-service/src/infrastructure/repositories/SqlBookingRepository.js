@@ -18,6 +18,13 @@ class SqlBookingRepository {
     return await Booking.findAll({ where: { userId }, order: [['startTime', 'DESC']] });
   }
 
+async delete(id) {
+  return await Booking.destroy({ where: { id } });
+}
+
+async findAll() {
+  return await Booking.findAll({ order: [['startTime', 'ASC']] });
+}
 
   async findConflictingBooking(roomId, startTime, endTime, excludeBookingId = null) {
     const whereClause = {
