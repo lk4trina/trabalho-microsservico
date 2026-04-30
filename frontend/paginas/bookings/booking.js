@@ -2,366 +2,232 @@ import {
   getRooms,
   createBookingRequest,
   getMyBookings,
-  cancelBookingRequest,
+  deleteBookingRequest, 
 } from "../../services/api.js";
-
 import { getToken, logout, getRole } from "../../utils/auth.js";
 
-//CRIAR RESERVA
+let calendar; 
 
-window.openCreateModal = async function () {
-  const select = document.getElementById("roomSelect");
-  const token = localStorage.getItem("token");
+document.addEventListener('DOMContentLoaded', async function() {
+    const calendarEl = document.getElementById('calendar');
 
+
+calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek', 
+        locale: 'pt-br', 
+        
+
+        buttonText: {
+            today: 'Hoje',
+            month: 'Mês',
+            week: 'Semana',
+            day: 'Dia',
+            list: 'Lista'
+        },
+        allDayText: '', 
+
+        headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+
+        selectable: true,
+        
+
+        select: function(info) {
+
+            const start = info.startStr.substring(0, 16);
+            const end = info.endStr.substring(0, 16);
+            
+            document.getElementById("createStartTime").value = start;
+            document.getElementById("createEndTime").value = end;
+            document.getElementById("create-modal").classList.remove("hidden");
+        },
+        
+        eventClick: function(info) {
+            const event = info.event;
+            
+            document.getElementById("editRoomSelect").value = event.extendedProps.roomId;
+            document.getElementById("editStartTime").value = event.startStr.substring(0, 16);
+            
+            if(event.endStr) {
+                document.getElementById("editEndTime").value = event.endStr.substring(0, 16);
+            } else {
+                document.getElementById("editEndTime").value = event.startStr.substring(0, 16); 
+            }
+
+            document.getElementById("btn-save-edit").onclick = () => saveEdit(event.id);
+            document.getElementById("btn-delete-booking").onclick = () => deleteBooking(event.id);
+            document.getElementById("edit-modal").classList.remove("hidden");
+        },
+        
+        events: async function(info, successCallback, failureCallback) {
+          
+            try {
+                const currentToken = getToken();
+                
+                if (!currentToken) {
+                    console.error("Token vazio! Redirecionando para login...");
+                    alert("Sessão expirada. Faça login novamente.");
+                    window.location.href = "../login/login.html"; // Ajuste o caminho da sua página de login
+                    return;
+                }
+              
+                const response = await getMyBookings(currentToken);
+                const data = await response.json();
+                
+                if(!response.ok) throw new Error(data.error || "Erro ao buscar");
+
+                // Transforma o JSON do BFF no formato que o Calendário entende
+                const events = data.map(b => ({
+                    id: b.id,
+                    title: b.roomName,
+                    start: b.startTime,
+                    end: b.endTime,
+                    backgroundColor: '#e91e63', 
+                    borderColor: '#c2185b',
+                    extendedProps: { roomId: b.roomId }
+                }));
+                
+                successCallback(events);
+            } catch (error) {
+                console.error(error);
+                failureCallback(error);
+            }
+        }
+    });
+
+    calendar.render();
+    fillRoomSelects(); 
+});
+
+
+async function fillRoomSelects() {
+  const token = getToken();
   try {
     const response = await getRooms(token);
     const rooms = await response.json();
-
-    select.innerHTML = rooms
-      .filter((r) => r.isActive)
-      .map(
-        (r) =>
-          `<option value="${r.id}">${r.name} (Capacidade: ${r.capacity})</option>`,
-      )
+    
+    const options = rooms
+      .filter(r => r.active)
+      .map(r => `<option value="${r.id}">${r.name} (Capacidade: ${r.capacity})</option>`)
       .join("");
-
-    document.getElementById("create-modal").classList.remove("hidden");
+      
+    document.getElementById("roomSelect").innerHTML = options;
+    document.getElementById("editRoomSelect").innerHTML = options;
   } catch (error) {
-    alert("Erro ao carregar salas: " + error.message);
+    console.error("Erro ao preencher salas:", error);
   }
-};
+}
 
+// --- CRIAR ---
 window.closeCreateModal = function () {
   document.getElementById("create-modal").classList.add("hidden");
 };
 
 window.saveNewBooking = async function () {
-  const token = localStorage.getItem("token");
-  const data = {
-    roomId: document.getElementById("roomSelect").value,
-    startTime: document.getElementById("createStartTime").value,
-    endTime: document.getElementById("createEndTime").value,
-  };
+  const roomId = document.getElementById("roomSelect").value;
+  const startTimeRaw = document.getElementById("createStartTime").value;
+  const endTimeRaw = document.getElementById("createEndTime").value;
+
+  if (!roomId || roomId === "") {
+      alert("Por favor, selecione uma sala válida.");
+      return;
+  }
+  if (!startTimeRaw || !endTimeRaw) {
+      alert("Por favor, preencha os horários.");
+      return;
+  }
+
+  const startTime = new Date(startTimeRaw).toISOString();
+  const endTime = new Date(endTimeRaw).toISOString();
+
+  const token = getToken();
+  const data = { roomId, startTime, endTime };
 
   try {
     const response = await createBookingRequest(data, token);
     if (response.ok) {
       alert("Reserva criada com sucesso!");
       closeCreateModal();
-      loadBookings();
+      calendar.refetchEvents();
     } else {
       const error = await response.json();
-      alert("Erro: " + error.message);
+      alert("Erro: " + (error.message || error.error));
     }
   } catch (error) {
     alert("Falha na comunicação com o servidor.");
   }
 };
 
-window.goToRooms = function () {
-  const role = localStorage.getItem("role");
-  if (role === "ADMIN") {
-    window.location.href = "../admin/admin.html";
-  } else {
-    window.location.href = "../user/user.html";
-  }
-};
-
-// Carregamento de Dados do BFF
-async function loadBookings() {
-  const listElement = document.getElementById("bookings-list");
-  const token = localStorage.getItem("token");
-
-  try {
-    const response = await getMyBookings(token);
-    if (!response.ok) throw new Error("Erro ao carregar reservas");
-
-    const bookings = await response.json();
-    renderBookings(bookings);
-  } catch (error) {
-    listElement.innerHTML = `<p class="error">Erro ao carregar: ${error.message}</p>`;
-  }
-}
-
-function renderBookings(bookings) {
-  const listElement = document.getElementById("bookings-list");
-
-  if (bookings.length === 0) {
-    listElement.innerHTML = "<p>Nenhuma reserva encontrada.</p>";
-    return;
-  }
-
-  listElement.innerHTML = bookings
-    .map(
-      (b) => `
-        <div class="room-card">
-            <div class="room-info">
-                <h3>${b.roomName}</h3>
-                <p class="room-details">
-                    <span><strong>Capacidade:</strong> ${b.roomCapacity}</span></br>  
-                    <span><strong>Status:</strong> ${b.status === "ACTIVE" ? "Confirmada" : "Cancelada"}</span>
-                </p>
-                <p class="booking-time">
-                    <i class="fa fa-clock"></i> 
-                    ${new Date(b.startTime).toLocaleString()} - ${new Date(b.endTime).toLocaleString()}
-                </p>
-            </div>
-            <div class="room-actions">
-                <button onclick="openEditModal(${JSON.stringify(b).replace(/"/g, "&quot;")})">
-                    <i class="fa fa-edit"></i> Editar
-                </button>
-                <button class="btn-cancel" onclick="cancelBooking(${b.id})">
-                    <i class="fa fa-trash"></i> Cancelar
-                </button>
-            </div>
-        </div>
-    `,
-    )
-    .join("");
-}
-
-/*
-function renderBookings(bookings) {
-    const listElement = document.getElementById("bookings-list");
-    const userRole = localStorage.getItem("role"); 
-
-    if (bookings.length === 0) {
-        listElement.innerHTML = "<p>Nenhuma reserva encontrada.</p>";
-        return;
-    }
-
-    listElement.innerHTML = bookings.map(b => {
-        
-        let actionButton = "";
-
-        if (b.status === 'CONFIRMED' || b.status === 'ACTIVE') {
-            
-            actionButton = `
-                <button class="btn-cancel" onclick="cancelBooking(${b.id})">
-                    <i class="fa fa-trash"></i> Cancelar
-                </button>`;
-        } 
-        else if (b.status === 'CANCELLED' && userRole === 'ADMIN') {
-           
-            actionButton = `
-                <button class="btn-reactivate" onclick="reactivateBooking(${b.id})">
-                    <i class="fa fa-undo"></i> Reativar
-                </button>`;
-        }
-        
-
-        return `
-            <div class="room-card ${b.status === 'CANCELLED' ? 'card-cancelled' : ''}">
-                <div class="room-info">
-                    <h3>${b.roomName}</h3>
-                    <p class="room-details">
-                        <span><strong>Capacidade:</strong> ${b.roomCapacity}</span> </br> 
-                        <span><strong>Status:</strong> '${b.status === 'ACTIVE' ? 'Confirmada' : 'Cancelada'}'</span>
-                    </p>
-                    <p class="booking-time">
-                        <i class="fa fa-clock"></i> 
-                        ${new Date(b.startTime).toLocaleString()}
-                    </p>
-                </div>
-                <div class="room-actions">
-                    ${b.status !== 'CANCELLED' ? `
-                        <button onclick="openEditModal(${JSON.stringify(b).replace(/"/g, '&quot;')})">
-                            <i class="fa fa-edit"></i> Editar
-                        </button>
-                    ` : ''}
-                    ${actionButton}
-                </div>
-            </div>
-        `;
-    }).join("");
-}
-
-
-window.reactivateBooking = async function(id) {
-    if (!confirm("Tem certeza que deseja reativar (descancelar) esta reserva?")) {
-        return;
-    }
-
-    const token = getToken();
-    const role = getRole();  
-
-    if (role !== "ADMIN") {
-        alert("Acesso negado: Apenas administradores podem reativar reservas.");
-        return;
-    }
-
-    try {
-        const res = await reactivateBookingRequest(id, token);
-        
-        if (!res.ok) {
-            const contentType = res.headers.get("content-type");
-            
-            if (contentType && contentType.includes("application/json")) {
-                const data = await res.json();
-                alert(data.error || data.message || "Erro ao reativar a reserva.");
-            } else {
-                alert(`Erro do servidor: ${res.status}. Verifique se a rota PATCH /reactivate existe no Gateway!`);
-            }
-            return;
-        }
-
-        alert("Reserva reativada com sucesso!");
-        loadBookings(); 
-
-    } catch (error) {
-        console.error("Erro ao reativar reserva:", error);
-        alert("Erro de conexão. O servidor pode estar desligado.");
-    }
-};
-
-//Ana - talvez essas duas funções mudem ou eu tire
-*/
-
-async function fillRoomSelect() {
-  const select = document.getElementById("roomSelect");
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    console.error("Token não encontrado no localStorage!");
-    return;
-  }
-
-  try {
-    const response = await getRooms(token);
-
-    if (!response.ok) {
-      console.error(`Erro na API: ${response.status} - ${response.statusText}`);
-      return;
-    }
-
-    const rooms = await response.json();
-    console.log("Salas recebidas:", rooms);
-
-    if (!rooms || rooms.length === 0) {
-      select.innerHTML = '<option value="">Nenhuma sala disponível</option>';
-      return;
-    }
-
-    select.innerHTML = rooms
-      .filter((r) => r.active) // <-- AQUI FOI CORRIGIDO
-      .map((r) => `<option value="${r.id}">${r.name}</option>`)
-      .join("");
-  } catch (error) {
-    console.error("Falha catastrófica ao preencher o select:", error);
-  }
-}
-
-// EDITAR
-
-window.openEditModal = function (booking) {
-  const modal = document.getElementById("edit-modal");
-  document.getElementById("edit-room-name").innerText =
-    `Sala: ${booking.roomName}`;
-
-  document.getElementById("editStartTime").value = booking.startTime.slice(
-    0,
-    16,
-  );
-  document.getElementById("editEndTime").value = booking.endTime.slice(0, 16);
-
-  const saveBtn = document.getElementById("btn-save-edit");
-  saveBtn.onclick = () => saveEdit(booking.id);
-
-  modal.classList.remove("hidden");
-};
-
+// --- EDITAR ---
 window.closeEditModal = function () {
   document.getElementById("edit-modal").classList.add("hidden");
 };
 
 window.saveEdit = async function (bookingId) {
-  const token = localStorage.getItem("token");
-  const data = {
-    startTime: document.getElementById("editStartTime").value,
-    endTime: document.getElementById("editEndTime").value,
-  };
+  const roomId = document.getElementById("editRoomSelect").value;
+  const startTimeRaw = document.getElementById("editStartTime").value;
+  const endTimeRaw = document.getElementById("editEndTime").value;
+
+  const startTime = new Date(startTimeRaw).toISOString();
+  const endTime = new Date(endTimeRaw).toISOString();
+
+  const token = getToken();
+  const data = { roomId, startTime, endTime };
 
   try {
-    const response = await fetch(
-      `http://localhost:3000/bookings/${bookingId}`,
-      {
+    const response = await fetch(`http://localhost:3000/bookings/${bookingId}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(data),
-      },
-    );
+    });
 
     if (response.ok) {
       alert("Reserva atualizada!");
       closeEditModal();
-      loadBookings();
+      calendar.refetchEvents();
     } else {
       const error = await response.json();
-      alert("Erro ao editar: " + error.message);
+      alert("Erro ao eaaaaditar: " + (error.message || error.error));
     }
   } catch (error) {
     alert("Erro na conexão.");
   }
 };
 
-// CANCELAR
-window.cancelBooking = async function (id) {
-  if (!confirm("Tem certeza que deseja cancelar esta reserva?")) {
-    return;
-  }
 
-  const token = getToken();
-
-  try {
-    const res = await cancelBookingRequest(id, token);
-
-    if (!res.ok) {
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        const data = await res.json();
-        alert(data.error || "Erro ao cancelar reserva");
-      } else {
-        alert(`Erro do servidor: ${res.status}.`);
-      }
-      return;
+// --- EXCLUIR ---
+window.deleteBooking = async function(id) {
+    if (!confirm("Tem certeza que deseja EXCLUIR esta reserva? Essa ação não tem volta!")) return;
+    
+    const token = getToken();
+    try {
+        const res = await deleteBookingRequest(id, token); // <-- Atualizado aqui!
+        
+        if (res.status === 204 || res.ok) {
+            alert("Reserva excluída permanentemente!");
+            closeEditModal();
+            calendar.refetchEvents(); 
+        } else {
+            const data = await res.json();
+            alert("Erro ao excluir: " + (data.error || "Verifique o Gateway."));
+        }
+    } catch (error) {
+        alert("Erro de conexão ao tentar excluir.");
     }
+}
 
-    alert("Reserva cancelada com sucesso!");
-
-    loadBookings();
-  } catch (error) {
-    console.error("Erro ao cancelar reserva:", error);
-    alert("Erro de conexão ao cancelar reserva");
-  }
+// --- CONTROLES GLOBAIS ---
+window.goToRooms = function () {
+  const role = getRole();
+  if (role === "ADMIN") { window.location.href = "../admin/admin.html"; } 
+  else { window.location.href = "../user/user.html"; }
 };
 
 window.toggleSidebar = function () {
-  const sidebar = document.getElementById("sidebar");
-  sidebar.classList.toggle("collapsed");
+  document.getElementById("sidebar").classList.toggle("collapsed");
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadBookings();
-  fillRoomSelect();
-
-  const btnCreate = document.getElementById("btn-open-create");
-  if (btnCreate) {
-    btnCreate.addEventListener("click", () => {
-      document.getElementById("create-modal").classList.remove("hidden");
-    });
-  }
-});
-
-window.closeCreateModal = function () {
-  document.getElementById("create-modal").classList.add("hidden");
-};
-
-window.closeEditModal = function () {
-  document.getElementById("edit-modal").classList.add("hidden");
-};
-
-// EXPORTS GLOBAIS
 window.logout = logout;

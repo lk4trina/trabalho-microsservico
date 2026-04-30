@@ -6,7 +6,7 @@ const BookingModel = require('./infrastructure/database/models/BookingModel');
 const SqlBookingRepository = require('./infrastructure/repositories/SqlBookingRepository');
 const CreateBooking = require('./application/use-cases/CreateBooking');
 const EditBooking = require('./application/use-cases/EditBooking');
-const CancelBooking = require('./application/use-cases/CancelBooking');
+const DeleteBooking = require('./application/use-cases/DeleteBooking');
 const ListUserBookings = require('./application/use-cases/ListUserBookings');
 const BookingController = require('./presentation/controllers/BookingController');
 
@@ -21,7 +21,7 @@ const bookingRepository = new SqlBookingRepository();
 const bookingController = new BookingController(
   new CreateBooking(bookingRepository),
   new EditBooking(bookingRepository),
-  new CancelBooking(bookingRepository),
+  new DeleteBooking(bookingRepository),
   new ListUserBookings(bookingRepository)
 );
 

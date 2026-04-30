@@ -6,22 +6,20 @@ class ApiGatewayProxy {
   }
 
   async getUserBookings(token) {
+    // CORREÇÃO: Apenas um "headers" e passamos a variável "token" direto!
     const response = await this.client.get("/bookings/my", {
       headers: {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        Authorization: token,
       },
     });
     return response.data;
   }
 
   async getRooms(token) {
+    // CORREÇÃO: Apenas um "headers" e passamos a variável "token" direto!
     const response = await this.client.get("/rooms", {
       headers: {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        Authorization: token,
       },
     });
     return response.data;

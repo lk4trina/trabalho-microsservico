@@ -4,18 +4,18 @@
     <meta charset="UTF-8" />
     <title>Minhas Reservas</title>
     <link rel="stylesheet" href="../../styles/index.css" />
+    <link rel="stylesheet" href="../../styles/global.css" />
     <link rel="stylesheet" href="../rooms/rooms.css" />
     <link rel="stylesheet" href="./booking.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
   </head>
 
   <div id="create-modal" class="modal hidden">
     <div class="modal-content">
       <h2>Nova Reserva</h2>
-
       <label for="roomSelect">Escolher Sala:</label>
       <select id="roomSelect"></select>
 
@@ -26,12 +26,29 @@
       <input id="createEndTime" type="datetime-local" />
 
       <div class="modal-buttons">
-        <button onclick="saveNewBooking()" class="btn-primary">
-          Confirmar
-        </button>
-        <button onclick="closeCreateModal()" class="btn-secondary">
-          Cancelar
-        </button>
+        <button onclick="saveNewBooking()" class="btn-primary">Confirmar</button>
+        <button onclick="closeCreateModal()" class="btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="edit-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Detalhes da Reserva</h2>
+      
+      <label for="editRoomSelect">Sala:</label>
+      <select id="editRoomSelect"></select>
+
+      <label for="editStartTime">Início:</label>
+      <input id="editStartTime" type="datetime-local" />
+
+      <label for="editEndTime">Fim:</label>
+      <input id="editEndTime" type="datetime-local" />
+
+      <div class="modal-buttons" style="display: flex; gap: 10px; margin-top: 15px;">
+        <button id="btn-save-edit" class="btn-primary">Salvar</button>
+        <button id="btn-delete-booking" class="btn-delete-booking">Excluir</button>
+        <button onclick="closeEditModal()" class="btn-secondary">Fechar</button>
       </div>
     </div>
   </div>
@@ -40,57 +57,27 @@
     <div class="container">
       <div class="sidebar" id="sidebar">
         <button class="toggle-btn" onclick="toggleSidebar()">
-          <i class="fa fa-bars"></i>
-          <span>Reduzir</span>
+          <i class="fa fa-bars"></i> <span>Reduzir</span>
         </button>
-
         <h2 class="menu-title">Menu</h2>
-
         <button onclick="goToRooms()">
-          <i class="fa fa-door-open"></i>
-          <span>Ver Salas</span>
+          <i class="fa fa-door-open"></i> <span>Ver Salas</span>
         </button>
-
-        <button id="btn-open-create">
-          <i class="fa fa-plus"></i>
-          <span>Nova Reserva</span>
-        </button>
-
         <button onclick="logout()">
-          <i class="fas fa-sign-out"></i>
-          <span>Sair</span>
+          <i class="fas fa-sign-out"></i> <span>Sair</span>
         </button>
       </div>
 
       <div class="main">
         <header>
-          <h2>Minhas Reservas</h2>
+          <h2>Minha Agenda de Reservas</h2>
         </header>
 
-        <div id="bookings-list" class="rooms"></div>
-      </div>
-    </div>
-
-    <div id="edit-modal" class="modal hidden">
-      <div class="modal-content">
-        <h2>Editar Horário</h2>
-        <p id="edit-room-name"></p>
-
-        <label for="editStartTime">Início:</label>
-        <input id="editStartTime" type="datetime-local" />
-
-        <label for="editEndTime">Fim:</label>
-        <input id="editEndTime" type="datetime-local" />
-
-        <div class="modal-buttons">
-          <button id="btn-save-edit" class="btn-primary">Salvar</button>
-          <button onclick="closeEditModal()" class="btn-secondary">
-            Cancelar
-          </button>
+        <div id='calendar-container' class="calendar-container">
+          <div id='calendar'></div>
         </div>
       </div>
     </div>
-
     <script type="module" src="./booking.js"></script>
   </body>
 </html>

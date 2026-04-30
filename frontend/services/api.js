@@ -90,19 +90,14 @@ export async function getMyBookings(token) {
   });
 }
 
-export async function cancelBookingRequest(id, token) {
-  return fetch(`${BASE_URL}/bookings/${id}/cancel`, {
-    method: "PATCH",
+//DELETAR RESERVA
+export async function deleteBookingRequest(id, token) {
+  return fetch(`${BASE_URL}/bookings/${id}`, {
+    method: "DELETE", 
     headers: {
       Authorization: "Bearer " + token,
     },
   });
 }
 
-//Ana - vou verificar se isso fica ainda
-/*export async function reactivateBookingRequest(id, token) {
-  return fetch(`${BASE_URL}/bookings/${id}/reactivate`, {
-    method: "PATCH", 
-    headers: { Authorization: "Bearer " + token }
-  });
-}*/
+

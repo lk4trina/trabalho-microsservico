@@ -6,7 +6,7 @@ module.exports = (bookingController) => {
   router.post('/bookings', bookingController.create);
   router.get('/bookings/my', bookingController.list);
   router.put('/bookings/:id', bookingController.edit);
-  router.patch('/bookings/:id/cancel', bookingController.cancel);
+  router.delete('/bookings/:id', bookingController.delete);
 
   return router;
 };

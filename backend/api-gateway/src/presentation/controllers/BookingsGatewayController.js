@@ -3,54 +3,52 @@ class BookingsGatewayController {
     this.bookingsProxy = bookingsProxy;
   }
 
-  create = async (req, res) => {
+create = async (req, res) => {
     try {
-      
-      const userId = req.user.id || req.user.username; 
-      
-      const booking = await this.bookingsProxy.createBooking(req.body, userId);
-      return res.status(201).json(booking);
+      const userId = req.user.id;
+      const userRole = req.user.role;
+      const booking = await this.bookingsProxy.createBooking(req.body, userId, userRole);
+      res.status(201).json(booking);
     } catch (error) {
-      console.error(error);
-    
-      const errorMsg = error.response?.data?.error || 'Erro ao criar reserva';
-      return res.status(error.response?.status || 500).json({ error: errorMsg });
+      res.status(400).json({ error: 'Erro ao criar reserva no gateway' });
     }
   };
 
   listUserBookings = async (req, res) => {
     try {
-      const userId = req.user.id || req.user.username;
-      const bookings = await this.bookingsProxy.getUserBookings(userId);
-      return res.json(bookings);
+      const userId = req.user.id;
+      const userRole = req.user.role; 
+      const bookings = await this.bookingsProxy.getUserBookings(userId, userRole);
+      res.json(bookings);
     } catch (error) {
-      console.error(error);
-      const errorMsg = error.response?.data?.error || 'Erro ao buscar reservas';
-      return res.status(error.response?.status || 500).json({ error: errorMsg });
+      res.status(500).json({ error: 'Erro ao buscar reservas no gateway' });
     }
   };
 
-  edit = async (req, res) => {
+edit = async (req, res) => {
     try {
-      const userId = req.user.id || req.user.username;
-      const booking = await this.bookingsProxy.editBooking(req.params.id, req.body, userId);
-      return res.json(booking);
+      const { id } = req.params;
+      const userId = req.user.id;
+      const userRole = req.user.role;
+      const booking = await this.bookingsProxy.editBooking(id, req.body, userId, userRole);
+      res.json(booking);
     } catch (error) {
-      console.error(error);
-      const errorMsg = error.response?.data?.error || 'Erro ao editar reserva';
-      return res.status(error.response?.status || 500).json({ error: errorMsg });
+      const msg = error.response && error.response.data ? error.response.data.error : error.message;
+      res.status(400).json({ error: msg });
     }
   };
 
-  cancel = async (req, res) => {
+
+  delete = async (req, res) => {
     try {
-      const userId = req.user.id || req.user.username;
-      const booking = await this.bookingsProxy.cancelBooking(req.params.id, userId);
-      return res.json(booking);
+      const { id } = req.params;
+      const userId = req.user.id;
+      const userRole = req.user.role; 
+      
+      await this.bookingsProxy.deleteBooking(id, userId, userRole);
+      res.status(204).send(); 
     } catch (error) {
-      console.error(error);
-      const errorMsg = error.response?.data?.error || 'Erro ao cancelar reserva';
-      return res.status(error.response?.status || 500).json({ error: errorMsg });
+      res.status(400).json({ error: 'Erro ao excluir reserva no gateway' });
     }
   };
 }
