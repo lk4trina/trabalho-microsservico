@@ -10,7 +10,8 @@ create = async (req, res) => {
       const booking = await this.bookingsProxy.createBooking(req.body, userId, userRole);
       res.status(201).json(booking);
     } catch (error) {
-      res.status(400).json({ error: 'Erro ao criar reserva no gateway' });
+      const msg = error.response && error.response.data ? error.response.data.error : 'Erro ao criar reserva no gateway';
+      res.status(400).json({ error: msg });
     }
   };
 
@@ -33,13 +34,13 @@ edit = async (req, res) => {
       const booking = await this.bookingsProxy.editBooking(id, req.body, userId, userRole);
       res.json(booking);
     } catch (error) {
-      const msg = error.response && error.response.data ? error.response.data.error : error.message;
+      const msg = error.response && error.response.data ? error.response.data.error : 'Erro ao editar reserva no gateway';
       res.status(400).json({ error: msg });
     }
   };
 
 
-  delete = async (req, res) => {
+delete = async (req, res) => {
     try {
       const { id } = req.params;
       const userId = req.user.id;
@@ -48,7 +49,8 @@ edit = async (req, res) => {
       await this.bookingsProxy.deleteBooking(id, userId, userRole);
       res.status(204).send(); 
     } catch (error) {
-      res.status(400).json({ error: 'Erro ao excluir reserva no gateway' });
+      const msg = error.response && error.response.data ? error.response.data.error : 'Erro ao excluir reserva no gateway';
+      res.status(400).json({ error: msg });
     }
   };
 }
