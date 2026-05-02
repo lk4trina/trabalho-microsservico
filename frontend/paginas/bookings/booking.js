@@ -190,7 +190,7 @@ window.saveEdit = async function (bookingId) {
       calendar.refetchEvents();
     } else {
       const error = await response.json();
-      alert("Erro ao eaaaaditar: " + (error.message || error.error));
+      alert("Erro ao editar: " + (error.message || error.error));
     }
   } catch (error) {
     alert("Erro na conexão.");
