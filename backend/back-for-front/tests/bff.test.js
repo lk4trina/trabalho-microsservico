@@ -57,7 +57,7 @@ describe('BFF Service - Testes de Agregação de Dados', () => {
     });
   });
 
-   /* describe('Unitário: BffController', () => {
+   describe('Unitário: BffController', () => {
     let req, res;
 
     beforeEach(() => {
@@ -85,7 +85,7 @@ it('Deve retornar erro 500 se o Caso de Uso falhar (Branch do CATCH)', async () 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({ error: 'Erro interno do servidor (BFF)' });
     });
-  });  */
+  });
 
   describe('Integração: GET /dashboard/my-bookings', () => {
     it('Deve retornar status 200 e a lista agregada', async () => {
