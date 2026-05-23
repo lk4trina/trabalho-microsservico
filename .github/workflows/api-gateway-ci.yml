@@ -54,7 +54,7 @@ jobs:
   build-and-push-docker:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
-    needs: build-and-test # Garante que o Docker só roda se o passo anterior (testes) passar!
+    needs: build-and-test
 
     steps:
       - name: Checkout repository
