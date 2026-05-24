@@ -1,32 +1,40 @@
 const express = require("express");
+const client = require('prom-client');
 const cors = require("cors");
-const roleMiddleware = require("./presentation/middlewares/roleMiddleware");
 
-//const InMemoryUserRepository = require('./infrastructure/repositories/InMemoryUserRepository');
+const metricsMiddleware = require("./presentation/middlewares/metricsMiddleware");
+const roleMiddleware = require("./presentation/middlewares/roleMiddleware");
+const authMiddlewareFactory = require("./presentation/middlewares/authMiddleware");
+
 const SqlUserRepository = require("./infrastructure/repositories/SqlUserRepository");
 const PasswordHasher = require("./infrastructure/security/PasswordHasher");
 const JwtService = require("./infrastructure/security/JWTService");
 const RoomsProxy = require("./infrastructure/http/RoomsProxy");
 const BookingsProxy = require("./infrastructure/http/BookingsProxy");
-
 const RegisterUser = require("./application/use-cases/RegisterUser");
 const LoginUser = require("./application/use-cases/LoginUser");
 const ValidateToken = require("./application/use-cases/ValidateToken");
-
 const AuthController = require("./presentation/controllers/AuthController");
 const RoomsGatewayController = require("./presentation/controllers/RoomsGatewayController");
 const BookingsGatewayController = require("./presentation/controllers/BookingsGatewayController");
-
 const authRoutes = require("./presentation/routes/authRoutes");
 const roomsRoutes = require("./presentation/routes/roomsRoutes");
 const bookingsRoutes = require("./presentation/routes/bookingsRoutes");
-const authMiddlewareFactory = require("./presentation/middlewares/authMiddleware");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-const userRepository = new SqlUserRepository(); //new InMemoryUserRepository();
+//Aplica o middleware de métricas
+app.use(metricsMiddleware);
+
+//Rota de Métricas
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
+});
+
+const userRepository = new SqlUserRepository();
 const passwordHasher = new PasswordHasher();
 const jwtService = new JwtService("segredo-super-seguro");
 const roomsProxy = new RoomsProxy("http://rooms_service:3002");
@@ -46,7 +54,6 @@ app.use(roomsRoutes(roomsGatewayController, authMiddleware, roleMiddleware));
 app.use(bookingsRoutes(bookingsGatewayController, authMiddleware));
 
 const sequelize = require("./infrastructure/database/sequelize");
-const User = require("./infrastructure/database/models/UserModel");
 
 async function inicializarBanco() {
   try {
