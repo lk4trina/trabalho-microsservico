@@ -2,7 +2,7 @@ const express = require("express");
 const client = require('prom-client');
 const cors = require("cors");
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('../swagger.json');
+const swaggerDocument = require('./swagger.json');
 
 // Middlewares
 const { metricsMiddleware } = require("./presentation/middlewares/metricsMiddleware");
