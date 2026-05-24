@@ -2,7 +2,7 @@ const express = require("express");
 const client = require('prom-client');
 const cors = require("cors");
 
-const metricsMiddleware = require("./presentation/middlewares/metricsMiddleware");
+const { metricsMiddleware } = require("./presentation/middlewares/metricsMiddleware");
 const roleMiddleware = require("./presentation/middlewares/roleMiddleware");
 const authMiddlewareFactory = require("./presentation/middlewares/authMiddleware");
 
