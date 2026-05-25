@@ -19,7 +19,7 @@ services:
       retries: 5
 
   rooms-service:
-    build: /backend/rooms-service 
+    build: ./backend/rooms-service
     container_name: rooms_service
     ports:
       - "3002:3002"
@@ -34,7 +34,7 @@ services:
         condition: service_healthy
 
   bookings-service:
-    build: /backend/bookings-service
+    build: ./backend/bookings-service
     container_name: bookings_service
     ports:
       - "3001:3001"
@@ -49,7 +49,7 @@ services:
         condition: service_healthy
 
   api-gateway:
-    build: /backend/api-gateway
+    build: ./backend/api-gateway
     container_name: api_gateway
     ports:
       - "3000:3000"
@@ -58,7 +58,7 @@ services:
       - DB_PORT=5432
       - DB_NAME=postgres
       - DB_USER=postgres
-      - DB_PASS=P@ulinha2003    
+      - DB_PASS=P@ulinha2003
     depends_on:
       db:
         condition: service_healthy
@@ -68,7 +68,7 @@ services:
         condition: service_started
 
   back-for-front:
-    build: /backend/back-for-front
+    build: ./backend/back-for-front
     container_name: back_for_front
     ports:
       - "3003:3003"
@@ -76,5 +76,25 @@ services:
       api-gateway:
         condition: service_started
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    depends_on:
+      - api-gateway
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3004:3000"
+    depends_on:
+      - prometheus
+
 volumes:
   postgres_data:
+  prometheus_data:
