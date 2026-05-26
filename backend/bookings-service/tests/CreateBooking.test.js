@@ -75,11 +75,9 @@ describe("CreateBooking", () => {
 
   describe("Unitário: Controller", () => {
     it("Deve retornar 400 se o Create falhar (Branch do CATCH)", async () => {
-      const req = { headers: { "x-user-id": "1", "x-user-role": "USER" }, body: {} };
-      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-      
-      jest.spyOn(createBookingUseCase, "execute").mockRejectedValue(new Error("Erro de validação"));
-      
+      const spy = jest
+        .spyOn(createBookingUseCase, "execute")
+        .mockRejectedValue(new Error("Erro de validação"));
       await bookingController.create(req, res);
       expect(res.status).toHaveBeenCalledWith(400);
     });
@@ -94,7 +92,7 @@ describe("CreateBooking", () => {
         .post("/bookings")
         .set("x-user-id", "1")
         .set("x-user-role", "USER")
-        .send({ roomId: 1, startTime: amanhaStr, endTime: depoisDeAmanhaStr });
+        .send({ roomId: 1, startTime: amanhaStr, endTime: depoisDeAmanhaStr});
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty("id", 2);
