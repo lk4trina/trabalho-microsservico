@@ -37,7 +37,7 @@ jobs:
         run: npm install
 
       - name: Executar Testes Unitários e gerar Cobertura
-        run: npm test -- --cov
+        run: npm test -- --coverage
 
       - name: Análise no SonarCloud
         uses: SonarSource/sonarcloud-github-action@master
