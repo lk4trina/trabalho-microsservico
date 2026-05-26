@@ -10,6 +10,8 @@ const DeleteBooking = require('./application/use-cases/DeleteBooking');
 const ListUserBookings = require('./application/use-cases/ListUserBookings');
 const BookingController = require('./presentation/controllers/BookingController');
 
+const { client } = require('./presentation/middlewares/metricsMiddleware');
+
 
 const bookingRoutes = require('./presentation/routes/bookingRoutes');
 
@@ -25,6 +27,10 @@ const bookingController = new BookingController(
   new ListUserBookings(bookingRepository)
 );
 
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
+});
 
 app.use(bookingRoutes(bookingController));
 
