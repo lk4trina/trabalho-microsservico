@@ -2,18 +2,18 @@ name: CI - Bookings Service
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", 'feature/**' ]
     paths:
       - 'backend/bookings-service/**' 
       - '.github/workflows/bookings-ci.yml'
   pull_request:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", 'feature/**' ]
     paths:
       - 'backend/bookings-service/**'
 
 jobs:
   build-and-test:
-    name: Build, Test e SonarCloud
+    name: Build, Teste e SonarCloud
     runs-on: ubuntu-latest
     
     defaults:
@@ -78,3 +78,13 @@ jobs:
           file: ./backend/bookings-service/Dockerfile
           push: true
           tags: ${{ secrets.D0CKER_USER }}/bookings-service:latest
+
+  deploy-dev:
+    name: Deploy para DEV (Render)
+    runs-on: ubuntu-latest
+    needs: build-and-push-docker 
+    if: github.ref == 'refs/heads/develop' 
+
+    steps:
+      - name: Disparar Webhook do Render
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_BOOKINGS }}          
