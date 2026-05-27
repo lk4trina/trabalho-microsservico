@@ -2,12 +2,12 @@ name: CI - Bookings Service
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", 'feature/**' ]
     paths:
       - 'backend/bookings-service/**' 
       - '.github/workflows/bookings-ci.yml'
   pull_request:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", 'feature/**' ]
     paths:
       - 'backend/bookings-service/**'
 
