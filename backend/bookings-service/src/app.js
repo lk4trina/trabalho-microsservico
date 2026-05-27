@@ -1,7 +1,11 @@
 const express = require('express');
+const swaggerUi = require('swagger-ui-express'); 
+const swaggerDocument = require('./swagger.json'); 
 const cors = require('cors');
 const sequelize = require('./infrastructure/database/sequelize');
 const BookingModel = require('./infrastructure/database/models/BookingModel');
+
+
 
 const SqlBookingRepository = require('./infrastructure/repositories/SqlBookingRepository');
 const CreateBooking = require('./application/use-cases/CreateBooking');
@@ -10,11 +14,18 @@ const DeleteBooking = require('./application/use-cases/DeleteBooking');
 const ListUserBookings = require('./application/use-cases/ListUserBookings');
 const BookingController = require('./presentation/controllers/BookingController');
 
+const { client } = require('./presentation/middlewares/metricsMiddleware');
+
 
 const bookingRoutes = require('./presentation/routes/bookingRoutes');
 
 const app = express();
 app.use(express.json());
+
+if (process.env.NODE_ENV === 'development') {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
+
 app.use(cors());
 
 const bookingRepository = new SqlBookingRepository();
@@ -25,6 +36,10 @@ const bookingController = new BookingController(
   new ListUserBookings(bookingRepository)
 );
 
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
+});
 
 app.use(bookingRoutes(bookingController));
 
