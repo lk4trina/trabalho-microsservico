@@ -1,7 +1,11 @@
 const express = require('express');
+const swaggerUi = require('swagger-ui-express'); 
+const swaggerDocument = require('./swagger.json'); 
 const cors = require('cors');
 const sequelize = require('./infrastructure/database/sequelize');
 const BookingModel = require('./infrastructure/database/models/BookingModel');
+
+
 
 const SqlBookingRepository = require('./infrastructure/repositories/SqlBookingRepository');
 const CreateBooking = require('./application/use-cases/CreateBooking');
@@ -17,6 +21,11 @@ const bookingRoutes = require('./presentation/routes/bookingRoutes');
 
 const app = express();
 app.use(express.json());
+
+if (process.env.NODE_ENV === 'development') {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
+
 app.use(cors());
 
 const bookingRepository = new SqlBookingRepository();
