@@ -94,5 +94,4 @@ async function inicializarBanco() {
 
 inicializarBanco();
 
-
 module.exports = app;
