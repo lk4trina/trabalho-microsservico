@@ -30,6 +30,8 @@ const BookingsGatewayController = require("./presentation/controllers/BookingsGa
 const authRoutes = require("./presentation/routes/authRoutes");
 const roomsRoutes = require("./presentation/routes/roomsRoutes");
 const bookingsRoutes = require("./presentation/routes/bookingsRoutes");
+const healthRoutes = require("./presentation/routes/healthRoutes");
+
 
 const app = express();
 
@@ -74,6 +76,7 @@ const authMiddleware = authMiddlewareFactory(validateToken);
 app.use(authRoutes(authController));
 app.use(roomsRoutes(roomsGatewayController, authMiddleware, roleMiddleware));
 app.use(bookingsRoutes(bookingsGatewayController, authMiddleware));
+app.use(healthRoutes());
 
 // --- Inicialização do Banco de Dados ---
 
@@ -90,5 +93,6 @@ async function inicializarBanco() {
 }
 
 inicializarBanco();
+
 
 module.exports = app;
