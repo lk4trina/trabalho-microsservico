@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "weekly"
   - package-ecosystem: "npm"
-    directory: "/backend/bookings-service"
+    directory: "/backend/bookings-servicssse"
     schedule:
       interval: "weekly"
   - package-ecosystem: "github-actions"
