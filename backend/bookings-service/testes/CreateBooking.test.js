@@ -3,6 +3,12 @@ const express = require("express");
 const CreateBooking = require("../src/application/use-cases/CreateBooking");
 const BookingController = require("../src/presentation/controllers/BookingController");
 
+jest.mock("../src/presentation/middlewares/metricsMiddleware", () => ({
+  bookingCounter: {
+    inc: jest.fn() 
+  }
+}));
+
 const amanha = new Date();
 amanha.setDate(amanha.getDate() + 1);
 const amanhaStr = amanha.toISOString();
