@@ -50,7 +50,7 @@ jobs:
             -Dsonar.projectKey=nanapssz_trabalho-microsservico
             -Dsonar.organization=nanapssz
             -Dsonar.sources=src
-            -Dsonar.tests=testes
+            -Dsonar.tests=tests
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
   build-and-push-docker:
@@ -92,7 +92,6 @@ jobs:
     name: Semantic Versioning Automático
     runs-on: ubuntu-latest
     needs: build-and-test 
-    if: github.ref == 'refs/heads/develop' 
 
     steps:
       - name: Checkout do código
@@ -105,4 +104,14 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }} 
-          default_bump: patch      
+          default_bump: patch   
+          
+  deploy-homol:
+    name: Deploy para HOMOL (Render)
+    runs-on: ubuntu-latest
+    needs: build-and-push-docker
+    if: github.ref == 'refs/heads/main' 
+
+    steps:
+      - name: Disparar Webhook do Render (HOMOL)
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_BOOKINGS_HOMOL }}          

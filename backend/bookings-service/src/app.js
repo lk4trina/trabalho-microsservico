@@ -29,6 +29,15 @@ app.get("/", (req, res) => {
   res.send("Booking Service rodando");
 });
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    service: 'bookings-service',
+    status: 'online',
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use(bookingRoutes(bookingController));
 
 
