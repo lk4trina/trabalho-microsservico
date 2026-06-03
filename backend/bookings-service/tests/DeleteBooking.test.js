@@ -17,6 +17,35 @@ describe("DeleteBooking", () => {
     };
   });
 
+  describe("Unitário: Use Case", () => {
+    let mockRepository, DeleteBooking, useCase;
+
+    beforeEach(() => {
+      mockRepository = { findById: jest.fn(), delete: jest.fn() };
+      DeleteBooking = require("../../src/application/use-cases/DeleteBooking");
+      useCase = new DeleteBooking(mockRepository);
+    });
+
+    it("Deve deletar a reserva com sucesso se pertencer ao usuário", async () => {
+      mockRepository.findById.mockResolvedValue({ id: 1, userId: "1" });
+      mockRepository.delete.mockResolvedValue(true);
+
+      await expect(useCase.execute("1", "1", "USER")).resolves.not.toThrow();
+      expect(mockRepository.delete).toHaveBeenCalledWith("1");
+    });
+
+    it("Deve lançar erro se a reserva não for encontrada", async () => {
+      mockRepository.findById.mockResolvedValue(null);
+      await expect(useCase.execute("99", "1", "USER")).rejects.toThrow();
+    });
+
+    it("Deve impedir que o usuário delete a reserva de outro usuário, mesmo sendo ADMIN", async () => {
+      mockRepository.findById.mockResolvedValue({ id: 1, userId: "2" }); 
+      
+      await expect(useCase.execute("1", "1", "ADMIN")).rejects.toThrow(); 
+    });
+  });  
+
   describe("Unitário: Controller", () => {
     it("Deve retornar 204 ao Deletar com sucesso", async () => {
       bookingController.deleteBooking = {

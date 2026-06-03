@@ -17,6 +17,32 @@ describe("EditBooking", () => {
     };
   });
 
+  describe("Unitário: Use Case", () => {
+    let mockRepository, EditBooking, useCase;
+
+    beforeEach(() => {
+      mockRepository = { findById: jest.fn(), update: jest.fn() };
+      EditBooking = require("../../src/application/use-cases/EditBooking");
+      useCase = new EditBooking(mockRepository);
+    });
+
+    it("Deve editar a reserva com sucesso se pertencer ao usuário", async () => {
+      const mockBooking = { id: 1, userId: "1", updateParams: jest.fn() };
+      mockRepository.findById.mockResolvedValue(mockBooking);
+      mockRepository.update.mockResolvedValue({ id: 1, status: "CANCELLED" });
+
+      const result = await useCase.execute("1", { status: "CANCELLED" }, "1", "USER");
+      expect(result.status).toBe("CANCELLED");
+    });
+
+    it("Deve lançar erro se tentar editar reserva de outro usuário", async () => {
+      const mockBooking = { id: 1, userId: "2" }; 
+      mockRepository.findById.mockResolvedValue(mockBooking);
+
+      await expect(useCase.execute("1", { status: "CANCELLED" }, "1", "USER")).rejects.toThrow();
+    });
+  });  
+
   describe("Unitário: Controller", () => {
     it("Deve retornar 200 ao Editar com sucesso", async () => {
       bookingController.editBooking = {
