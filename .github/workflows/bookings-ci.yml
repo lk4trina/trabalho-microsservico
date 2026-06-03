@@ -50,7 +50,7 @@ jobs:
             -Dsonar.projectKey=nanapssz_trabalho-microsservico
             -Dsonar.organization=nanapssz
             -Dsonar.sources=src
-            -Dsonar.tests=testes
+            -Dsonar.tests=tests
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
   build-and-push-docker:
