@@ -56,10 +56,17 @@ app.get('/metrics', async (req, res) => {
 
 const userRepository = new SqlUserRepository();
 const passwordHasher = new PasswordHasher();
-const jwtService = new JwtService("segredo-super-seguro");
+const jwtService = new JwtService(
+  process.env.JWT_SECRET || "segredo-super-seguro"
+);
 
-const roomsProxy = new RoomsProxy("http://rooms_service:3002");
-const bookingsProxy = new BookingsProxy("http://bookings_service:3001");
+const roomsProxy = new RoomsProxy(
+  process.env.ROOMS_SERVICE_URL || "http://rooms_service:3002"
+);
+
+const bookingsProxy = new BookingsProxy(
+  process.env.BOOKINGS_SERVICE_URL || "http://bookings_service:3001"
+);
 
 const registerUser = new RegisterUser(userRepository, passwordHasher);
 const loginUser = new LoginUser(userRepository, passwordHasher, jwtService);
@@ -70,6 +77,11 @@ const roomsGatewayController = new RoomsGatewayController(roomsProxy);
 const bookingsGatewayController = new BookingsGatewayController(bookingsProxy);
 
 const authMiddleware = authMiddlewareFactory(validateToken);
+
+app.get("/", (req, res) => {
+  res.send("API Gateway rodando");
+});
+
 
 // --- Rotas da Aplicação ---
 

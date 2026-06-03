@@ -20,6 +20,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.get("/", (req, res) => {
+  res.send("Rooms Service rodando");
+});
+
 app.use(authMiddleware);
 
 const roomRepository = new SqlRoomRepository();

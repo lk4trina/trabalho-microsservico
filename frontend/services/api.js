@@ -1,5 +1,5 @@
-const BASE_URL = "http://localhost:3000";
-const BFF_URL = "http://localhost:3003";
+const BASE_URL = "https://api-gateway-homol.onrender.com";
+const BFF_URL = "https://bff-t8a8.onrender.com";
 
 // AUTH
 export async function loginRequest(data) {
