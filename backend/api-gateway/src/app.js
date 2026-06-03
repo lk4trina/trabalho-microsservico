@@ -56,6 +56,11 @@ app.get('/metrics', async (req, res) => {
 
 const userRepository = new SqlUserRepository();
 const passwordHasher = new PasswordHasher();
+
+if (!process.env.JWT_SECRET && process.env.NODE_ENV === "production") {
+  throw new Error("JWT_SECRET não configurado");
+}
+
 const jwtService = new JwtService(
   process.env.JWT_SECRET || "segredo-super-seguro"
 );
