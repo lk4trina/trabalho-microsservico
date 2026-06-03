@@ -39,6 +39,14 @@ jobs:
       - name: Executar Testes Unitários e gerar Cobertura
         run: npm test -- --coverage
 
+      - name: Verificar token
+        run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "TOKEN VAZIO"
+            exit 1
+          else
+            echo "TOKEN ENCONTRADO"
+          fi
       - name: Análise no SonarCloud
         uses: SonarSource/sonarcloud-github-action@master
         env:
