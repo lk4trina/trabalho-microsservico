@@ -1,4 +1,5 @@
 const Booking = require('../../domain/entities/Booking');
+const { bookingCounter } = require('../../presentation/middlewares/metricsMiddleware');
 
 class CreateBooking {
   constructor(bookingRepository) {
@@ -28,13 +29,17 @@ class CreateBooking {
       throw new Error('Conflito de horário: A sala já está reservada neste período.');
     }
 
-    return await this.bookingRepository.create({
+    const savedBooking = await this.bookingRepository.create({
       roomId: booking.roomId,
       userId: booking.userId,
       startTime: booking.startTime,
       endTime: booking.endTime,
       status: booking.status
     });
+
+    bookingCounter.inc(); 
+
+    return savedBooking;
   }
 }
 module.exports = CreateBooking;
