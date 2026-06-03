@@ -11,7 +11,10 @@ module.exports = (req, res, next) => {
   try {
     const [, token] = authHeader.split(" ");
 
-    const decoded = jwt.verify(token, "segredo-super-seguro");
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "segredo-super-seguro"
+    );
 
     req.user = decoded;
 
