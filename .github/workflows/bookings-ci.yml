@@ -39,14 +39,6 @@ jobs:
       - name: Executar Testes Unitários e gerar Cobertura
         run: npm test -- --coverage
 
-      - name: Debug Secrets
-        run: |
-          echo "SONAR_TOKEN=${#SONAR_TOKEN}"
-          echo "S0NAR_TOKEN=${#S0NAR_TOKEN}"
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          S0NAR_TOKEN: ${{ secrets.S0NAR_TOKEN }}
-
       - name: Análise no SonarCloud
         uses: SonarSource/sonarcloud-github-action@master
         env:
