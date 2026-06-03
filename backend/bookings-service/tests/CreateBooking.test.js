@@ -48,6 +48,33 @@ describe("CreateBooking - Conjunto Completo", () => {
 
       expect(result).toHaveProperty("id");
     });
+
+it("Deve lançar erro se a data de início for igual ou posterior ao término", async () => {
+      await expect(
+        createBookingUseCase.execute({
+          roomId: 1, 
+          userId: 1,
+          startTime: depoisDeAmanhaStr, 
+          endTime: amanhaStr,
+          status: "ACTIVE"
+        }, "USER")
+      ).rejects.toThrow("O horário de fim deve ser posterior ao horário de início"); 
+    });
+
+    it("Deve lançar erro se tentar criar reserva no passado", async () => {
+      const dataPassada = new Date();
+      dataPassada.setDate(dataPassada.getDate() - 5); // 5 dias atrás
+      
+      await expect(
+        createBookingUseCase.execute({
+          roomId: 1, 
+          userId: 1,
+          startTime: dataPassada.toISOString(), 
+          endTime: amanhaStr,
+          status: "ACTIVE"
+        }, "USER")
+      ).rejects.toThrow("Não é possível criar uma reserva com data no passado.");
+    });    
   });
 
   describe("Unitário: Controller", () => {

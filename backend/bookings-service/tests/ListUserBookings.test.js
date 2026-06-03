@@ -1,4 +1,5 @@
 const BookingController = require("../src/presentation/controllers/BookingController");
+const ListUserBookings = require("../src/application/use-cases/ListUserBookings"); 
 
 describe("ListUserBookings", () => {
   let req, res, bookingController;
@@ -16,6 +17,32 @@ describe("ListUserBookings", () => {
       send: jest.fn(),
     };
   });
+
+  describe("Unitário: Use Case", () => {
+    let mockRepository, useCase;
+
+    beforeEach(() => {
+      mockRepository = { findByUserId: jest.fn() };
+      useCase = new ListUserBookings(mockRepository);
+    });
+
+    it("Deve retornar as reservas do próprio usuário", async () => {
+      mockRepository.findByUserId.mockResolvedValue([{ id: 1, userId: "1" }]);
+      
+      const result = await useCase.execute("1", "USER");
+      expect(mockRepository.findByUserId).toHaveBeenCalledWith("1");
+      expect(result).toHaveLength(1);
+    });
+
+    it("Deve restringir a listagem aos dados do próprio usuário, mesmo se for ADMIN", async () => {
+      mockRepository.findByUserId.mockResolvedValue([{ id: 2, userId: "1" }]);
+      
+      const result = await useCase.execute("1", "ADMIN"); 
+      
+      expect(mockRepository.findByUserId).toHaveBeenCalledWith("1");
+      expect(result[0].userId).toBe("1");
+    });
+  });  
 
   describe("Unitário: Controller", () => {
     it("Deve retornar 200 ao Listar com sucesso", async () => {
