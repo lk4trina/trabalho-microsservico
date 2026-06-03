@@ -1,4 +1,5 @@
 const BookingController = require("../src/presentation/controllers/BookingController");
+const EditBooking = require("../src/application/use-cases/EditBooking"); 
 
 describe("EditBooking", () => {
   let req, res, bookingController;
@@ -18,11 +19,10 @@ describe("EditBooking", () => {
   });
 
   describe("Unitário: Use Case", () => {
-    let mockRepository, EditBooking, useCase;
+    let mockRepository, useCase;
 
     beforeEach(() => {
       mockRepository = { findById: jest.fn(), update: jest.fn() };
-      EditBooking = require("../../src/application/use-cases/EditBooking");
       useCase = new EditBooking(mockRepository);
     });
 

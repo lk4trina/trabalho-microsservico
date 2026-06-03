@@ -1,4 +1,5 @@
 const BookingController = require("../src/presentation/controllers/BookingController");
+const DeleteBooking = require("../src/application/use-cases/DeleteBooking"); 
 
 describe("DeleteBooking", () => {
   let req, res, bookingController;
@@ -18,11 +19,10 @@ describe("DeleteBooking", () => {
   });
 
   describe("Unitário: Use Case", () => {
-    let mockRepository, DeleteBooking, useCase;
+    let mockRepository, useCase;
 
     beforeEach(() => {
       mockRepository = { findById: jest.fn(), delete: jest.fn() };
-      DeleteBooking = require("../../src/application/use-cases/DeleteBooking");
       useCase = new DeleteBooking(mockRepository);
     });
 
@@ -41,7 +41,6 @@ describe("DeleteBooking", () => {
 
     it("Deve impedir que o usuário delete a reserva de outro usuário, mesmo sendo ADMIN", async () => {
       mockRepository.findById.mockResolvedValue({ id: 1, userId: "2" }); 
-      
       await expect(useCase.execute("1", "1", "ADMIN")).rejects.toThrow(); 
     });
   });  

@@ -49,16 +49,16 @@ describe("CreateBooking - Conjunto Completo", () => {
       expect(result).toHaveProperty("id");
     });
 
-    it("Deve lançar erro se a data de início for igual ou posterior ao término", async () => {
+it("Deve lançar erro se a data de início for igual ou posterior ao término", async () => {
       await expect(
         createBookingUseCase.execute({
           roomId: 1, 
           userId: 1,
-          startTime: depoisDeAmanhaStr, // Início está DEPOIS do término
+          startTime: depoisDeAmanhaStr, 
           endTime: amanhaStr,
           status: "ACTIVE"
         }, "USER")
-      ).rejects.toThrow("A data de início deve ser anterior à data de término.");
+      ).rejects.toThrow("O horário de fim deve ser posterior ao horário de início"); 
     });
 
     it("Deve lançar erro se tentar criar reserva no passado", async () => {
