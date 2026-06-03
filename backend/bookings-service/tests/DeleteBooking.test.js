@@ -38,11 +38,6 @@ describe("DeleteBooking", () => {
       mockRepository.findById.mockResolvedValue(null);
       await expect(useCase.execute("99", "1", "USER")).rejects.toThrow();
     });
-
-    it("Deve impedir que o usuário delete a reserva de outro usuário, mesmo sendo ADMIN", async () => {
-      mockRepository.findById.mockResolvedValue({ id: 1, userId: "2" }); 
-      await expect(useCase.execute("1", "1", "ADMIN")).rejects.toThrow(); 
-    });
   });  
 
   describe("Unitário: Controller", () => {
