@@ -41,6 +41,15 @@ app.get('/metrics', async (req, res) => {
   res.end(await client.register.metrics());
 });
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    service: 'bookings-service',
+    status: 'online',
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use(bookingRoutes(bookingController));
 
 
