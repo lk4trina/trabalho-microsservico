@@ -2,12 +2,14 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'api-gateway'
-    scrape_interval: 5s
+  - job_name: 'api-gateway-homol'
+    scheme: https
+    metrics_path: /metrics
     static_configs:
-      - targets: ['api-gateway:3000'] # O nome do serviço no compose é api-gateway
+      - targets: ['api-gateway-homol.onrender.com']
 
-  - job_name: 'bookings-service'
-    scrape_interval: 5s
+  - job_name: 'bookings-service-homol'
+    scheme: https
+    metrics_path: /metrics
     static_configs:
-      - targets: ['bookings-service:3001']      
+      - targets: ['bookings-service-5yst.onrender.com']
