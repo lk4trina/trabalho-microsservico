@@ -25,6 +25,9 @@ const bookingController = new BookingController(
   new ListUserBookings(bookingRepository)
 );
 
+app.get("/", (req, res) => {
+  res.send("Booking Service rodando");
+});
 
 app.use(bookingRoutes(bookingController));
 
