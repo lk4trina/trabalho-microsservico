@@ -1,11 +1,14 @@
 const express = require("express");
-const client = require('prom-client');
 const cors = require("cors");
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
 // Middlewares
-const { metricsMiddleware } = require("./presentation/middlewares/metricsMiddleware");
+const {
+  metricsMiddleware,
+  metricsEndpoint,
+} = require("./presentation/middlewares/metricsMiddleware");
+
 const roleMiddleware = require("./presentation/middlewares/roleMiddleware");
 const authMiddlewareFactory = require("./presentation/middlewares/authMiddleware");
 
@@ -32,25 +35,26 @@ const roomsRoutes = require("./presentation/routes/roomsRoutes");
 const bookingsRoutes = require("./presentation/routes/bookingsRoutes");
 const healthRoutes = require("./presentation/routes/healthRoutes");
 
+// Banco de Dados
+const sequelize = require("./infrastructure/database/sequelize");
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-// --- Middlewares de Observabilidade e Documentação ---
-
-if (process.env.NODE_ENV !== 'production') {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-  console.log("Swagger habilitado em /api-docs");
-}
+// --- Observabilidade ---
 
 app.use(metricsMiddleware);
 
-app.get('/metrics', async (req, res) => {
-  res.set('Content-Type', client.register.contentType);
-  res.end(await client.register.metrics());
-});
+app.get("/metrics", metricsEndpoint);
+
+// --- Documentação ---
+
+if (process.env.NODE_ENV !== "production") {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  console.log("Swagger habilitado em /api-docs");
+}
 
 // --- Injeção de Dependências e Setup de Serviços ---
 
@@ -83,10 +87,11 @@ const bookingsGatewayController = new BookingsGatewayController(bookingsProxy);
 
 const authMiddleware = authMiddlewareFactory(validateToken);
 
+// --- Rota raiz ---
+
 app.get("/", (req, res) => {
   res.send("API Gateway rodando");
 });
-
 
 // --- Rotas da Aplicação ---
 
@@ -96,8 +101,6 @@ app.use(bookingsRoutes(bookingsGatewayController, authMiddleware));
 app.use(healthRoutes());
 
 // --- Inicialização do Banco de Dados ---
-
-const sequelize = require("./infrastructure/database/sequelize");
 
 async function inicializarBanco() {
   try {
