@@ -9,13 +9,18 @@ const EditBooking = require('./application/use-cases/EditBooking');
 const DeleteBooking = require('./application/use-cases/DeleteBooking');
 const ListUserBookings = require('./application/use-cases/ListUserBookings');
 const BookingController = require('./presentation/controllers/BookingController');
-
-
 const bookingRoutes = require('./presentation/routes/bookingRoutes');
 
+
+const metrics = require('./presentation/middlewares/metricsMiddleware'); 
+
 const app = express();
+
 app.use(express.json());
 app.use(cors());
+
+
+app.use(metrics.middleware);
 
 const bookingRepository = new SqlBookingRepository();
 const bookingController = new BookingController(
@@ -25,10 +30,7 @@ const bookingController = new BookingController(
   new ListUserBookings(bookingRepository)
 );
 
-app.get("/", (req, res) => {
-  res.send("Booking Service rodando");
-});
-
+// HEALTHCHECK
 app.get('/', (req, res) => {
   res.status(200).json({
     service: 'bookings-service',
@@ -38,8 +40,18 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use(bookingRoutes(bookingController));
+// MIDDLEWARE - PROMETHEUS
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', metrics.client.register.contentType);
+    res.end(await metrics.client.register.metrics());
+  } catch (ex) {
+    res.status(500).end(ex);
+  }
+});
 
+// ROTAS DE NEGÓCIO
+app.use(bookingRoutes(bookingController));
 
 async function inicializarBanco() {
   try {
