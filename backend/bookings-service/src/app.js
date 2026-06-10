@@ -19,9 +19,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
-app.use(metrics.middleware);
-
 const bookingRepository = new SqlBookingRepository();
 const bookingController = new BookingController(
   new CreateBooking(bookingRepository),
