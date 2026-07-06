@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rooms-service
+  namespace: trabalho-microsservico
+  labels:
+    app: rooms-service
+spec:
+  type: ClusterIP
+  selector:
+    app: rooms-service
+  ports:
+    - name: http
+      port: 3002
+      targetPort: 3002

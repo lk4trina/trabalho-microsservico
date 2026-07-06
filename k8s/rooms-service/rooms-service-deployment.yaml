@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rooms-service
+  namespace: trabalho-microsservico
+  labels:
+    app: rooms-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rooms-service
+  template:
+    metadata:
+      labels:
+        app: rooms-service
+    spec:
+      containers:
+        - name: rooms-service
+          image: trabalho/rooms-service:local
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3002
+          envFrom:
+            - configMapRef:
+                name: rooms-service-config
+            - secretRef:
+                name: rooms-service-secret
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3002
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3002
+            initialDelaySeconds: 30
+            periodSeconds: 15

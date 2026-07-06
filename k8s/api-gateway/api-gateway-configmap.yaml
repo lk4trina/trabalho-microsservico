@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-gateway-config
+  namespace: trabalho-microsservico
+data:
+  PORT: "3000"
+  NODE_ENV: development
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_NAME: postgres
+  DB_USER: postgres
+  ROOMS_SERVICE_URL: http://rooms-service:3002
+  BOOKINGS_SERVICE_URL: http://bookings-service:3001

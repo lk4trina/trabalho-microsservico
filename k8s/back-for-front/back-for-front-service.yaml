@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-for-front
+  namespace: trabalho-microsservico
+  labels:
+    app: back-for-front
+spec:
+  type: ClusterIP
+  selector:
+    app: back-for-front
+  ports:
+    - name: http
+      port: 3003
+      targetPort: 3003
