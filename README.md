@@ -1,4 +1,4 @@
-# Trabalho Prático 3 — Kubernetes com CI/CD e Observabilidade
+# Kubernetes com CI/CD e Observabilidade
 
 Este diretório contém os manifests Kubernetes para executar a aplicação de microsserviços no Minikube.
 
@@ -12,7 +12,7 @@ Este diretório contém os manifests Kubernetes para executar a aplicação de m
 - Prometheus
 - Grafana
 
-Os microsserviços da aplicação foram configurados com `replicas: 2`, conforme solicitado no enunciado.
+Os microsserviços da aplicação foram configurados com `replicas: 2`.
 
 ## Pré-requisitos
 
@@ -143,8 +143,6 @@ Targets configurados inicialmente:
 - `api-gateway:3000/metrics`
 - `bookings-service:3001/metrics`
 
-Observação: no código atual do repositório, os endpoints `/metrics` aparecem no API Gateway e no Bookings Service. Para observabilidade completa de todos os serviços, recomenda-se adicionar o endpoint `/metrics` também no Rooms Service e no Back For Front.
-
 ## 9. Alternativa sem Ingress: port-forward
 
 Caso o Ingress não abra no Windows, use port-forward:
@@ -211,5 +209,4 @@ kubectl delete namespace trabalho-microsservico
 1. Os dados sensíveis estão em `Secret`, como senha do banco, `DATABASE_URL`, `JWT_SECRET` e senha do Grafana.
 2. Variáveis não sensíveis estão em `ConfigMap`, como portas, `NODE_ENV`, hosts internos e URLs entre serviços.
 3. O banco PostgreSQL usa `PersistentVolumeClaim` para persistência local no Minikube.
-4. Os microsserviços usam `replicas: 2`, conforme o enunciado.
-5. Para homologação, altere `NODE_ENV` para `production` nos ConfigMaps se quiser desabilitar o Swagger.
+4. Para observabilidade completa de todos os serviços futuramente serão adicionadas métricas também ali para o Rooms Service e Back For Front
