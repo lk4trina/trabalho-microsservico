@@ -161,7 +161,7 @@ Depois acesse:
 - http://localhost:9090
 - http://localhost:3004
 
-## 10. Comandos úteis para a apresentação
+## 10. Outros comandos úteis 
 
 Ver múltiplos pods:
 
